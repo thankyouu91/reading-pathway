@@ -42,14 +42,14 @@
             const y = (e.clientY - rect.top) / rect.height - 0.5;
 
             if (heroText) {
-                heroText.style.transform = `translateZ(40px) translateX(${x * -10}px) translateY(${y * -8}px)`;
+                heroText.style.transform = `translateX(${x * -8}px) translateY(${y * -6}px)`;
             }
             if (heroBadge) {
-                heroBadge.style.transform = `translateZ(60px) translateX(${x * -15}px) translateY(${y * -12}px)`;
+                heroBadge.style.transform = `translateX(${x * -12}px) translateY(${y * -10}px)`;
             }
             heroStats.forEach((stat, i) => {
-                const depth = (i + 1) * 3;
-                stat.style.transform = `translateZ(30px) translateX(${x * -depth}px) translateY(${y * -depth}px)`;
+                const depth = (i + 1) * 2;
+                stat.style.transform = `translateX(${x * -depth}px) translateY(${y * -depth}px)`;
             });
         });
 
@@ -60,26 +60,9 @@
         });
     }
 
-    // ===== 3D SCROLL DEPTH =====
-    const sections3D = document.querySelectorAll('.section');
+    // ===== 3D SCROLL DEPTH (subtle, no overlap) =====
 
-    const scrollObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const ratio = entry.intersectionRatio;
-                const el = entry.target;
-                const rotateX = (1 - ratio) * 3;
-                el.style.transform = `perspective(1200px) rotateX(${rotateX}deg)`;
-                el.style.opacity = 0.5 + ratio * 0.5;
-            }
-        });
-    }, {
-        threshold: Array.from({ length: 20 }, (_, i) => i / 20)
-    });
-
-    sections3D.forEach(s => scrollObserver.observe(s));
-
-    // ===== 3D DEPTH SHADOW ON SCROLL =====
+    // ===== PARALLAX ON SCROLL (no translateZ) =====
     let ticking = false;
     window.addEventListener('scroll', () => {
         if (!ticking) {
@@ -87,8 +70,8 @@
                 const scrollY = window.scrollY;
                 const shapes = document.querySelectorAll('.shape');
                 shapes.forEach((shape, i) => {
-                    const depth = (i + 1) * 0.05;
-                    shape.style.transform = `translateZ(${-50 - i * 30}px) translateY(${scrollY * depth}px)`;
+                    const speed = (i + 1) * 0.03;
+                    shape.style.transform = `translateY(${scrollY * speed}px)`;
                 });
                 ticking = false;
             });
