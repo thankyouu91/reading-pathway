@@ -505,27 +505,50 @@
     background: linear-gradient(180deg, var(--color-neutral-900), var(--color-neutral-950, #0C1220));
 }
 
+/* Achieve3000 section - dark text on light background */
+.section-dark {
+    background: var(--surface-secondary, #F8FAFC) !important;
+}
+
 .section-dark .section-header h2,
-.section-dark .section-header p,
 .section-dark h2, .section-dark h3, .section-dark h4,
 .section-dark .achieve-feature-main h3,
-.section-dark .achieve-feature-main p,
-.section-dark .achieve-card h4,
-.section-dark .achieve-card p,
-.section-dark .meter-label,
-.section-dark .meter-scale span {
-    color: white !important;
+.section-dark .achieve-card h4 {
+    color: var(--color-neutral-800, #1E293B) !important;
 }
 
 .section-dark .section-header p,
 .section-dark .achieve-feature-main p,
 .section-dark .achieve-card p,
+.section-dark .meter-label,
 .section-dark .meter-scale span {
-    opacity: 0.75;
+    color: var(--color-neutral-500, #64748B) !important;
+    opacity: 1;
+}
+
+.section-dark .section-header.light h2,
+.section-dark .section-header.light p {
+    color: var(--color-neutral-800, #1E293B) !important;
 }
 
 .section-dark .section-header h2::after {
     background: var(--color-secondary-500);
+}
+
+.section-dark .achieve-feature-main {
+    background: white;
+    border: 1px solid var(--border-default, #E2E8F0);
+    box-shadow: var(--shadow-card);
+}
+
+.section-dark .achieve-card {
+    background: white;
+    border: 1px solid var(--border-default, #E2E8F0);
+    box-shadow: var(--shadow-card);
+}
+
+.section-dark .achieve-card:hover {
+    box-shadow: var(--shadow-card-hover);
 }
 
 /* ===== ACTIVITIES (Blue) TEXT FIX ===== */
