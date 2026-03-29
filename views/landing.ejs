@@ -196,6 +196,9 @@
         <div class="shape shape-2"></div>
         <div class="shape shape-3"></div>
     </div>
+    <!-- Floating side illustrations -->
+    <img src="https://stories.freepiklabs.com/storage/4525/book-lover-01.svg" alt="" class="hero-side-illus hero-illus-left" loading="lazy">
+    <img src="https://stories.freepiklabs.com/storage/32390/Online-Learning_Artboard-1-copy.svg" alt="" class="hero-side-illus hero-illus-right" loading="lazy">
     <div class="container hero-content">
         <div class="hero-text">
             <div class="hero-badge"><%= g('hero','badge') %></div>
@@ -369,15 +372,13 @@
             <p><%= g('pathway','description') %></p>
         </div>
         <div class="pathway-timeline">
-            <% const stageIllustrations = [
-                '👧🏻', // Mầm non - bé gái nhỏ
-                '👦🏻', // Tiểu học - bé trai
-                '🧑🏻'  // THCS - thiếu niên
-            ]; %>
             <% const stages = [
-                { n: 1, icon: '🌱', css: 'kindergarten', dotCss: '', lineCss: '', illus: stageIllustrations[0] },
-                { n: 2, icon: '📖', css: 'primary', dotCss: '', lineCss: '', illus: stageIllustrations[1] },
-                { n: 3, icon: '🎯', css: 'secondary', dotCss: '', lineCss: '', illus: stageIllustrations[2] }
+                { n: 1, icon: '🌱', css: 'kindergarten', dotCss: '', lineCss: '',
+                  illus: 'https://stories.freepiklabs.com/storage/4524/book-lover_Artboard-1.svg' },
+                { n: 2, icon: '📖', css: 'primary', dotCss: '', lineCss: '',
+                  illus: 'https://stories.freepiklabs.com/storage/16533/472-Learning_Artboard-1.svg' },
+                { n: 3, icon: '🎯', css: 'secondary', dotCss: '', lineCss: '',
+                  illus: 'https://stories.freepiklabs.com/storage/34149/learning-01.svg' }
             ]; %>
             <% stages.forEach(s => { %>
             <div class="pathway-stage" data-stage="<%= s.n %>">
@@ -387,7 +388,7 @@
                 </div>
                 <div class="stage-content">
                     <div class="stage-card <%= s.css %>">
-                        <div class="stage-illustration"><%= s.illus %></div>
+                        <div class="stage-illustration"><img src="<%= s.illus %>" alt="illustration" loading="lazy"></div>
                         <div class="stage-header">
                             <span class="stage-icon"><%= s.icon %></span>
                             <div>
@@ -426,10 +427,11 @@
                 </div>
             </div>
 
-            <% const achieveIllus = ['🧑🏻‍💻', '👩🏻‍🎓']; %>
             <% const stagesAchieve = [
-                { n: 4, icon: '🏆', css: 'highschool', illus: achieveIllus[0] },
-                { n: 5, icon: '🎓', css: 'university', illus: achieveIllus[1] }
+                { n: 4, icon: '🏆', css: 'highschool',
+                  illus: 'https://stories.freepiklabs.com/storage/34549/Online-Learning_Mesa-de-trabajo-1.svg' },
+                { n: 5, icon: '🎓', css: 'university',
+                  illus: 'https://stories.freepiklabs.com/storage/1548/63-Graduation_Artboard-1.svg' }
             ]; %>
             <% stagesAchieve.forEach((s, idx) => { %>
             <div class="pathway-stage" data-stage="<%= s.n %>">
@@ -439,7 +441,7 @@
                 </div>
                 <div class="stage-content">
                     <div class="stage-card <%= s.css %>">
-                        <div class="stage-illustration"><%= s.illus %></div>
+                        <div class="stage-illustration"><img src="<%= s.illus %>" alt="illustration" loading="lazy"></div>
                         <div class="stage-header">
                             <span class="stage-icon"><%= s.icon %></span>
                             <div>
