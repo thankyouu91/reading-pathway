@@ -1,10 +1,15 @@
 const Database = require('better-sqlite3');
 const path = require('path');
+const fs = require('fs');
 
 const dbPath = path.join(__dirname, 'reading-pathway.db');
 const db = new Database(dbPath);
 
+// Performance pragmas
 db.pragma('journal_mode = WAL');
+db.pragma('busy_timeout = 5000');
+db.pragma('synchronous = NORMAL');
+db.pragma('cache_size = -64000');
 
 // Create tables with multi-language support
 db.exec(`
@@ -29,7 +34,8 @@ db.exec(`
     goal TEXT,
     lang TEXT DEFAULT 'vi',
     is_read INTEGER DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
   CREATE TABLE IF NOT EXISTS blog_posts (
@@ -42,6 +48,7 @@ db.exec(`
     meta_description TEXT DEFAULT '',
     meta_keywords TEXT DEFAULT '',
     is_published INTEGER DEFAULT 0,
+    views_count INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
@@ -52,6 +59,13 @@ db.exec(`
     password_hash TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
+
+  -- INDEXES for performance
+  CREATE INDEX IF NOT EXISTS idx_content_lang_section ON content(lang, section);
+  CREATE INDEX IF NOT EXISTS idx_submissions_created ON submissions(created_at DESC);
+  CREATE INDEX IF NOT EXISTS idx_submissions_is_read ON submissions(is_read);
+  CREATE INDEX IF NOT EXISTS idx_blog_published ON blog_posts(is_published, created_at DESC);
+  CREATE INDEX IF NOT EXISTS idx_blog_slug ON blog_posts(slug, is_published);
 `);
 
 // Available languages
@@ -60,6 +74,18 @@ db.LANGUAGES = {
   en: { name: 'English', flag: '🇺🇸' },
   lo: { name: 'ພາສາລາວ', flag: '🇱🇦' },
   km: { name: 'ភាសាខ្មែរ', flag: '🇰🇭' }
+};
+
+// Backup function
+db.backupTo = function(dest) {
+  const backupDir = path.join(__dirname, 'backups');
+  if (!fs.existsSync(backupDir)) fs.mkdirSync(backupDir, { recursive: true });
+  const backupPath = dest || path.join(backupDir, `backup-${new Date().toISOString().slice(0,10)}.db`);
+  fs.copyFileSync(dbPath, backupPath);
+  // Keep only 7 latest backups
+  const files = fs.readdirSync(backupDir).filter(f => f.startsWith('backup-')).sort().reverse();
+  files.slice(7).forEach(f => fs.unlinkSync(path.join(backupDir, f)));
+  return backupPath;
 };
 
 module.exports = db;

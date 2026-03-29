@@ -3,12 +3,15 @@ const express = require('express');
 const session = require('express-session');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
+const morgan = require('morgan');
 const crypto = require('crypto');
 const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const IS_PROD = process.env.NODE_ENV === 'production';
+const SITE_URL = process.env.SITE_URL || 'https://reading-pathway-production.up.railway.app';
 
 // Auto-seed database on first run
 const db = require('./database/db');
@@ -20,16 +23,26 @@ if (contentCount === 0) {
   require('./database/fix-b2b');
 }
 
-// ===== SECURITY HEADERS =====
+// Daily backup
+db.backupTo();
+setInterval(() => db.backupTo(), 24 * 60 * 60 * 1000);
+
+// Compression (gzip/brotli)
+app.use(compression());
+
+// Request logging
+app.use(morgan(IS_PROD ? 'combined' : 'dev'));
+
+// Security headers
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://unpkg.com", "https://lottie.host"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://unpkg.com", "https://lottie.host", "https://www.googletagmanager.com", "https://www.google-analytics.com"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:", "blob:"],
-      connectSrc: ["'self'", "https://lottie.host", "https://stories.freepiklabs.com"],
+      connectSrc: ["'self'", "https://lottie.host", "https://stories.freepiklabs.com", "https://www.google-analytics.com", "https://region1.google-analytics.com"],
       frameSrc: ["'none'"],
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
@@ -49,7 +62,7 @@ app.use(cookieParser());
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
-// ===== SESSION (hardened) =====
+// Session (hardened)
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
 app.use(session({
   secret: SESSION_SECRET,
@@ -57,16 +70,15 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: 8 * 60 * 60 * 1000, // 8 hours (was 24)
+    maxAge: 8 * 60 * 60 * 1000,
     httpOnly: true,
     secure: IS_PROD,
     sameSite: 'lax'
   }
 }));
 
-// ===== CSRF PROTECTION (double-submit pattern) =====
+// CSRF token generation
 app.use((req, res, next) => {
-  // Generate CSRF token for every session
   if (!req.session.csrfToken) {
     req.session.csrfToken = crypto.randomBytes(32).toString('hex');
   }
@@ -74,16 +86,8 @@ app.use((req, res, next) => {
   next();
 });
 
-function csrfCheck(req, res, next) {
-  // Skip for API routes (they use JSON + origin check)
-  if (req.path.startsWith('/api/')) return next();
-
-  const token = req.body._csrf || req.headers['x-csrf-token'];
-  if (!token || token !== req.session.csrfToken) {
-    return res.status(403).send('Invalid CSRF token');
-  }
-  next();
-}
+// Make SITE_URL available to all views
+app.locals.siteUrl = SITE_URL;
 
 // HTTPS redirect in production
 if (IS_PROD) {
@@ -95,9 +99,10 @@ if (IS_PROD) {
   });
 }
 
-// Static files
+// Static files with cache
 app.use(express.static(path.join(__dirname, 'public'), {
-  maxAge: IS_PROD ? '7d' : 0
+  maxAge: IS_PROD ? '7d' : 0,
+  etag: true
 }));
 
 // Routes
@@ -111,14 +116,16 @@ app.use((req, res) => {
   res.status(404).send('Page not found');
 });
 
-// Error handler
+// Error handler (improved)
 app.use((err, req, res, next) => {
-  console.error(err.message);
-  res.status(500).send('Server error');
-});
+  console.error(`[${new Date().toISOString()}] ${req.method} ${req.path}`, err.stack || err.message);
 
-// Export csrfCheck for routes
-app.locals.csrfCheck = csrfCheck;
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(413).send('File qua lon (toi da 5MB)');
+  }
+
+  res.status(err.statusCode || 500).send(IS_PROD ? 'Server error' : err.message);
+});
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server: http://localhost:${PORT}`);

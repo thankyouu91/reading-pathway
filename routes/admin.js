@@ -14,10 +14,18 @@ const DOMPurify = createDOMPurify;
 // Login rate limit: 5 attempts per 15 minutes
 const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 5 });
 
-// Account lockout tracking (in-memory)
+// Account lockout tracking (in-memory) with auto-cleanup
 const loginAttempts = new Map();
 const LOCKOUT_THRESHOLD = 5;
-const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes
+const LOCKOUT_DURATION = 15 * 60 * 1000;
+
+// Cleanup stale entries every 5 minutes to prevent memory leak
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, record] of loginAttempts) {
+    if (now - record.lastAttempt > LOCKOUT_DURATION) loginAttempts.delete(key);
+  }
+}, 5 * 60 * 1000);
 
 function checkLockout(username) {
   const record = loginAttempts.get(username);
@@ -87,10 +95,9 @@ router.get('/login', (req, res) => {
   res.render('admin/login', { error: null, csrfToken: res.locals.csrfToken });
 });
 
-router.post('/login', loginLimiter, csrfCheck, (req, res) => {
+router.post('/login', loginLimiter, csrfCheck, async (req, res) => {
   const { username, password } = req.body;
 
-  // Check lockout
   if (checkLockout(username || '')) {
     return res.render('admin/login', {
       error: 'Tai khoan bi khoa tam thoi. Vui long thu lai sau 15 phut.',
@@ -100,7 +107,7 @@ router.post('/login', loginLimiter, csrfCheck, (req, res) => {
 
   const user = db.prepare('SELECT * FROM admin_users WHERE username = ?').get(username);
 
-  if (user && bcrypt.compareSync(password || '', user.password_hash)) {
+  if (user && await bcrypt.compare(password || '', user.password_hash)) {
     clearLoginAttempts(username);
     // Regenerate session to prevent fixation
     const adminId = user.id;
@@ -140,10 +147,10 @@ router.get('/', requireAuth, (req, res) => {
 // ===== SECTIONS =====
 router.get('/sections', requireAuth, (req, res) => {
   const lang = req.query.lang || 'vi';
+  const rows = db.prepare('SELECT section, COUNT(*) as count FROM content WHERE lang = ? GROUP BY section').all(lang);
   const counts = {};
-  for (const key of Object.keys(SECTIONS)) {
-    counts[key] = db.prepare('SELECT COUNT(*) as count FROM content WHERE section = ? AND lang = ?').get(key, lang).count;
-  }
+  for (const key of Object.keys(SECTIONS)) counts[key] = 0;
+  rows.forEach(r => { counts[r.section] = r.count; });
   res.render('admin/sections', { sections: SECTIONS, counts, user: req.session.adminUser, lang, languages: db.LANGUAGES });
 });
 
@@ -200,12 +207,22 @@ router.post('/blog/save', requireAuth, csrfCheck, (req, res) => {
   const { id, title, slug, excerpt, content, cover_image, meta_description, meta_keywords, is_published } = req.body;
   const cleanSlug = (slug || title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
+  // Sanitize blog content - whitelist safe HTML tags
+  const cleanTitle = DOMPurify.sanitize(title, { ALLOWED_TAGS: [] });
+  const cleanExcerpt = DOMPurify.sanitize(excerpt, { ALLOWED_TAGS: [] });
+  const cleanContent = DOMPurify.sanitize(content, {
+    ALLOWED_TAGS: ['p','br','h1','h2','h3','h4','h5','h6','ul','ol','li','a','strong','em','img','blockquote','pre','code','table','tr','td','th','thead','tbody','span'],
+    ALLOWED_ATTR: ['href','src','alt','class','target','style','width','height']
+  });
+  const cleanMeta = DOMPurify.sanitize(meta_description || '', { ALLOWED_TAGS: [] });
+  const cleanKeywords = DOMPurify.sanitize(meta_keywords || '', { ALLOWED_TAGS: [] });
+
   if (id) {
     db.prepare('UPDATE blog_posts SET title=?, slug=?, excerpt=?, content=?, cover_image=?, meta_description=?, meta_keywords=?, is_published=?, updated_at=CURRENT_TIMESTAMP WHERE id=?')
-      .run(title, cleanSlug, excerpt, content, cover_image || '', meta_description || '', meta_keywords || '', is_published ? 1 : 0, id);
+      .run(cleanTitle, cleanSlug, cleanExcerpt, cleanContent, cover_image || '', cleanMeta, cleanKeywords, is_published ? 1 : 0, id);
   } else {
     db.prepare('INSERT INTO blog_posts (title, slug, excerpt, content, cover_image, meta_description, meta_keywords, is_published) VALUES (?,?,?,?,?,?,?,?)')
-      .run(title, cleanSlug, excerpt, content, cover_image || '', meta_description || '', meta_keywords || '', is_published ? 1 : 0);
+      .run(cleanTitle, cleanSlug, cleanExcerpt, cleanContent, cover_image || '', cleanMeta, cleanKeywords, is_published ? 1 : 0);
   }
   res.redirect('/admin/blog');
 });
@@ -234,10 +251,15 @@ router.post('/submissions/:id/read', requireAuth, csrfCheck, (req, res) => {
 });
 
 router.get('/submissions/export', requireAuth, (req, res) => {
+  // CSV escape to prevent injection (=, +, -, @, |)
+  const esc = (v) => {
+    const s = (v || '').toString().replace(/"/g, '""');
+    return /^[=+\-@|]/.test(s) ? `"'${s}"` : `"${s}"`;
+  };
   const rows = db.prepare('SELECT * FROM submissions ORDER BY created_at DESC').all();
   let csv = 'ID,Ten,SDT,Email,Cap,Muc Tieu,Ngay\n';
   rows.forEach(r => {
-    csv += `${r.id},"${(r.parent_name||'').replace(/"/g,'""')}","${r.phone}","${r.email}","${r.child_age||''}","${r.goal||''}","${r.created_at}"\n`;
+    csv += `${r.id},${esc(r.parent_name)},${esc(r.phone)},${esc(r.email)},${esc(r.child_age)},${esc(r.goal)},${esc(r.created_at)}\n`;
   });
   res.setHeader('Content-Type', 'text/csv; charset=utf-8');
   res.setHeader('Content-Disposition', 'attachment; filename=submissions.csv');

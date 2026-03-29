@@ -1701,6 +1701,77 @@ body {
     z-index: 1;
 }
 
+/* ===== CTA FORM BUTTON SHINE ===== */
+.cta-form .btn-primary {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    box-shadow: 0 6px 20px rgba(0, 86, 166, 0.35);
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-form .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+    animation: btnShine 3s ease-in-out infinite;
+}
+
+@keyframes btnShine {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) rotate(45deg); }
+}
+
+/* Hero secondary button contrast */
+.hero-cta .btn-outline {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: var(--trophy-primary);
+    color: var(--trophy-primary);
+    font-weight: 600;
+}
+
+.hero-cta .btn-outline:hover {
+    background: var(--trophy-primary);
+    color: white;
+    box-shadow: 0 8px 25px rgba(0, 86, 166, 0.25);
+}
+
+/* Form input focus micro-interaction */
+.form-group:focus-within label {
+    color: var(--trophy-primary);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    transform: translateY(-1px);
+}
+
+/* Mobile nav animation */
+@media (max-width: 768px) {
+    .nav-links.active {
+        animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .comparison-table-wrapper::after {
+        content: 'Vuot sang de xem them →';
+        display: block;
+        text-align: center;
+        padding: 12px;
+        font-size: 0.8rem;
+        color: var(--text-light);
+    }
+}
+
 /* ===== RESPONSIVE POLISH ===== */
 @media (max-width: 768px) {
     .program-card {
