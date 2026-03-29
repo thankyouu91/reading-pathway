@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 50">
-  <rect x="0" y="3" width="42" height="44" rx="4" fill="#C8372D"/>
-  <text x="9" y="20" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="white">Mc</text>
-  <text x="5" y="32" font-family="Arial, sans-serif" font-size="10" font-weight="700" fill="white">Graw</text>
-  <text x="10" y="43" font-family="Arial, sans-serif" font-size="10" font-weight="700" fill="white">Hill</text>
-  <text x="52" y="20" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#2D5F6E">Achieve</text>
-  <text x="165" y="20" font-family="Arial, sans-serif" font-size="18" fill="#C8372D">3000</text>
-  <text x="52" y="43" font-family="Georgia, 'Times New Roman', serif" font-size="22" font-style="italic" fill="#C8372D">Literacy</text>
-  <text x="155" y="32" font-family="Arial, sans-serif" font-size="8" fill="#C8372D">TM</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 48">
+  <rect x="0" y="2" width="38" height="44" rx="4" fill="#C8372D"/>
+  <text x="8" y="18" font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="white">Mc</text>
+  <text x="4" y="30" font-family="Arial, sans-serif" font-size="10" font-weight="700" fill="white">Graw</text>
+  <text x="8" y="41" font-family="Arial, sans-serif" font-size="10" font-weight="700" fill="white">Hill</text>
+  <text x="46" y="19" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#2D5F6E">Achieve</text>
+  <text x="138" y="19" font-family="Arial, sans-serif" font-size="17" fill="#C8372D">3000</text>
+  <text x="46" y="42" font-family="Georgia, 'Times New Roman', serif" font-size="21" font-style="italic" fill="#C8372D">Literacy</text>
+  <text x="140" y="30" font-family="Arial, sans-serif" font-size="7" fill="#C8372D">TM</text>
 </svg>
