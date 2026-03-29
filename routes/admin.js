@@ -4,59 +4,121 @@ const bcrypt = require('bcrypt');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 const db = require('../database/db');
 const requireAuth = require('../middleware/auth');
 const rateLimit = require('express-rate-limit');
+const createDOMPurify = require('isomorphic-dompurify');
+const DOMPurify = createDOMPurify;
 
-// Rate limit login
-const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10 });
+// Login rate limit: 5 attempts per 15 minutes
+const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 5 });
 
-// Multer for image uploads
+// Account lockout tracking (in-memory)
+const loginAttempts = new Map();
+const LOCKOUT_THRESHOLD = 5;
+const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes
+
+function checkLockout(username) {
+  const record = loginAttempts.get(username);
+  if (!record) return false;
+  if (record.count >= LOCKOUT_THRESHOLD) {
+    if (Date.now() - record.lastAttempt < LOCKOUT_DURATION) return true;
+    loginAttempts.delete(username);
+  }
+  return false;
+}
+
+function recordFailedLogin(username) {
+  const record = loginAttempts.get(username) || { count: 0, lastAttempt: 0 };
+  record.count++;
+  record.lastAttempt = Date.now();
+  loginAttempts.set(username, record);
+}
+
+function clearLoginAttempts(username) {
+  loginAttempts.delete(username);
+}
+
+// CSRF check middleware
+function csrfCheck(req, res, next) {
+  const token = req.body._csrf;
+  if (!token || token !== req.session.csrfToken) {
+    return res.status(403).send('Phien lam viec khong hop le. Vui long tai lai trang.');
+  }
+  next();
+}
+
+// File upload with sanitized filename
 const storage = multer.diskStorage({
   destination: path.join(__dirname, '..', 'public', 'images', 'uploads'),
   filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname.replace(/\s+/g, '-'));
+    const ext = path.extname(file.originalname).toLowerCase();
+    const safeName = crypto.randomBytes(8).toString('hex') + ext;
+    cb(null, safeName);
   }
 });
+
 const upload = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    cb(null, /jpeg|jpg|png|svg|webp|gif/.test(file.mimetype));
+    const allowedExt = /\.(jpeg|jpg|png|svg|webp|gif)$/i;
+    const allowedMime = /^image\/(jpeg|png|svg\+xml|webp|gif)$/;
+    if (allowedExt.test(path.extname(file.originalname)) && allowedMime.test(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Chi chap nhan file hinh anh'));
+    }
   }
 });
 
-// Section display names
+// Section names
 const SECTIONS = {
-  nav: 'Navigation',
-  hero: 'Hero Banner',
-  program: 'Tong Quan Chuong Trinh',
-  activities: '9 Hoat Dong Trophy9',
-  levels: 'Cap Do T1-T6',
-  pathway: 'Lo Trinh Hoc',
-  achieve3000: 'Achieve3000',
-  ielts: 'Pre-IELTS & IELTS',
-  comparison: 'Bang So Sanh',
-  b2b: 'Truong Hoc & Trung Tam',
-  contact: 'Lien He & Form',
-  footer: 'Footer'
+  nav: 'Navigation', hero: 'Hero Banner', program: 'Tong Quan Chuong Trinh',
+  activities: '9 Hoat Dong Trophy9', levels: 'Cap Do T1-T6',
+  pathway: 'Lo Trinh Hoc', achieve3000: 'Achieve3000',
+  ielts: 'Pre-IELTS & IELTS', comparison: 'Bang So Sanh',
+  b2b: 'Truong Hoc & Trung Tam', contact: 'Lien He & Form', footer: 'Footer'
 };
 
 // ===== LOGIN =====
 router.get('/login', (req, res) => {
-  res.render('admin/login', { error: null });
+  res.render('admin/login', { error: null, csrfToken: res.locals.csrfToken });
 });
 
-router.post('/login', loginLimiter, (req, res) => {
+router.post('/login', loginLimiter, csrfCheck, (req, res) => {
   const { username, password } = req.body;
+
+  // Check lockout
+  if (checkLockout(username || '')) {
+    return res.render('admin/login', {
+      error: 'Tai khoan bi khoa tam thoi. Vui long thu lai sau 15 phut.',
+      csrfToken: res.locals.csrfToken
+    });
+  }
+
   const user = db.prepare('SELECT * FROM admin_users WHERE username = ?').get(username);
 
-  if (user && bcrypt.compareSync(password, user.password_hash)) {
-    req.session.adminId = user.id;
-    req.session.adminUser = user.username;
-    return res.redirect('/admin');
+  if (user && bcrypt.compareSync(password || '', user.password_hash)) {
+    clearLoginAttempts(username);
+    // Regenerate session to prevent fixation
+    const adminId = user.id;
+    const adminUser = user.username;
+    req.session.regenerate((err) => {
+      if (err) return res.status(500).send('Login error');
+      req.session.adminId = adminId;
+      req.session.adminUser = adminUser;
+      req.session.csrfToken = crypto.randomBytes(32).toString('hex');
+      res.redirect('/admin');
+    });
+  } else {
+    recordFailedLogin(username || 'unknown');
+    res.render('admin/login', {
+      error: 'Sai tai khoan hoac mat khau',
+      csrfToken: res.locals.csrfToken
+    });
   }
-  res.render('admin/login', { error: 'Sai tai khoan hoac mat khau' });
 });
 
 router.get('/logout', (req, res) => {
@@ -69,13 +131,9 @@ router.get('/', requireAuth, (req, res) => {
   const totalSubmissions = db.prepare('SELECT COUNT(*) as count FROM submissions').get().count;
   const unreadSubmissions = db.prepare('SELECT COUNT(*) as count FROM submissions WHERE is_read = 0').get().count;
   const totalContent = db.prepare('SELECT COUNT(*) as count FROM content').get().count;
-
   res.render('admin/dashboard', {
-    user: req.session.adminUser,
-    sections: SECTIONS,
-    totalSubmissions,
-    unreadSubmissions,
-    totalContent
+    user: req.session.adminUser, sections: SECTIONS,
+    totalSubmissions, unreadSubmissions, totalContent
   });
 });
 
@@ -95,33 +153,30 @@ router.get('/sections/:section', requireAuth, (req, res) => {
   if (!SECTIONS[section]) return res.redirect('/admin/sections');
 
   const rows = db.prepare('SELECT * FROM content WHERE section = ? AND lang = ? ORDER BY sort_order').all(section, lang);
-
   res.render('admin/edit-section', {
-    section,
-    sectionName: SECTIONS[section],
-    rows,
-    lang,
-    languages: db.LANGUAGES,
-    user: req.session.adminUser,
-    success: req.query.success === '1'
+    section, sectionName: SECTIONS[section], rows, lang,
+    languages: db.LANGUAGES, user: req.session.adminUser,
+    success: req.query.success === '1', csrfToken: res.locals.csrfToken
   });
 });
 
-router.post('/sections/:section', requireAuth, (req, res) => {
+router.post('/sections/:section', requireAuth, csrfCheck, (req, res) => {
   const section = req.params.section;
+  if (!SECTIONS[section]) return res.status(400).send('Invalid section');
+
   const lang = req.body._lang || 'vi';
   const updates = { ...req.body };
   delete updates._lang;
+  delete updates._csrf;
 
   const stmt = db.prepare('UPDATE content SET content_value = ?, updated_at = CURRENT_TIMESTAMP WHERE lang = ? AND section = ? AND content_key = ?');
-
   const updateAll = db.transaction(() => {
     for (const [key, value] of Object.entries(updates)) {
-      stmt.run(value, lang, section, key);
+      const sanitized = DOMPurify.sanitize(value, { ALLOWED_TAGS: [] });
+      stmt.run(sanitized, lang, section, key);
     }
   });
   updateAll();
-
   res.redirect(`/admin/sections/${section}?lang=${lang}&success=1`);
 });
 
@@ -130,29 +185,24 @@ router.get('/submissions', requireAuth, (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = 20;
   const offset = (page - 1) * limit;
-
   const total = db.prepare('SELECT COUNT(*) as count FROM submissions').get().count;
   const submissions = db.prepare('SELECT * FROM submissions ORDER BY created_at DESC LIMIT ? OFFSET ?').all(limit, offset);
-
   res.render('admin/submissions', {
-    submissions,
-    page,
-    totalPages: Math.ceil(total / limit),
-    total,
-    user: req.session.adminUser
+    submissions, page, totalPages: Math.ceil(total / limit), total,
+    user: req.session.adminUser, csrfToken: res.locals.csrfToken
   });
 });
 
-router.post('/submissions/:id/read', requireAuth, (req, res) => {
+router.post('/submissions/:id/read', requireAuth, csrfCheck, (req, res) => {
   db.prepare('UPDATE submissions SET is_read = 1 WHERE id = ?').run(req.params.id);
   res.redirect('/admin/submissions');
 });
 
 router.get('/submissions/export', requireAuth, (req, res) => {
   const rows = db.prepare('SELECT * FROM submissions ORDER BY created_at DESC').all();
-  let csv = 'ID,Ho Ten,SDT,Email,Do Tuoi,Muc Tieu,Da Doc,Ngay\n';
+  let csv = 'ID,Ten,SDT,Email,Cap,Muc Tieu,Ngay\n';
   rows.forEach(r => {
-    csv += `${r.id},"${r.parent_name}","${r.phone}","${r.email}","${r.child_age}","${r.goal}",${r.is_read ? 'Co' : 'Chua'},"${r.created_at}"\n`;
+    csv += `${r.id},"${(r.parent_name||'').replace(/"/g,'""')}","${r.phone}","${r.email}","${r.child_age||''}","${r.goal||''}","${r.created_at}"\n`;
   });
   res.setHeader('Content-Type', 'text/csv; charset=utf-8');
   res.setHeader('Content-Disposition', 'attachment; filename=submissions.csv');
@@ -163,19 +213,15 @@ router.get('/submissions/export', requireAuth, (req, res) => {
 router.get('/images', requireAuth, (req, res) => {
   const imgDir = path.join(__dirname, '..', 'public', 'images');
   const uploadDir = path.join(imgDir, 'uploads');
-
   const mainImages = fs.readdirSync(imgDir).filter(f => !fs.statSync(path.join(imgDir, f)).isDirectory());
   const uploadedImages = fs.existsSync(uploadDir) ? fs.readdirSync(uploadDir) : [];
-
   res.render('admin/images', {
-    mainImages,
-    uploadedImages,
-    user: req.session.adminUser,
-    success: req.query.success === '1'
+    mainImages, uploadedImages, user: req.session.adminUser,
+    success: req.query.success === '1', csrfToken: res.locals.csrfToken
   });
 });
 
-router.post('/images/upload', requireAuth, upload.single('image'), (req, res) => {
+router.post('/images/upload', requireAuth, csrfCheck, upload.single('image'), (req, res) => {
   res.redirect('/admin/images?success=1');
 });
 

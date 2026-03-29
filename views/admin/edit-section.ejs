@@ -14,6 +14,7 @@ ${success ? '<div class="alert alert-success">Đã lưu thành công!</div>' : '
 ${rows.length === 0 ? '<div class="alert alert-error">Chưa có nội dung cho ngôn ngữ này. Vui lòng chạy seed trước.</div>' : ''}
 
 <form method="POST" action="/admin/sections/${section}" class="edit-form">
+    <input type="hidden" name="_csrf" value="${csrfToken}">
     <input type="hidden" name="_lang" value="${lang}">
     ${rows.map(row => {
         const isLong = row.content_value.length > 80 || row.content_type === 'html' || row.content_type === 'list';

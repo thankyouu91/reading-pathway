@@ -31,6 +31,7 @@
                 <td>
                     ${s.is_read ? '<span class="badge badge-read">Da doc</span>' :
                     `<form method="POST" action="/admin/submissions/${s.id}/read" style="display:inline">
+                        <input type="hidden" name="_csrf" value="${csrfToken}">
                         <button type="submit" class="badge badge-unread">Chua doc</button>
                     </form>`}
                 </td>

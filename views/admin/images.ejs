@@ -4,6 +4,7 @@
 ${success ? '<div class="alert alert-success">Upload thanh cong!</div>' : ''}
 
 <form method="POST" action="/admin/images/upload" enctype="multipart/form-data" class="upload-form">
+    <input type="hidden" name="_csrf" value="${csrfToken}">
     <input type="file" name="image" accept="image/*" required>
     <button type="submit" class="btn-admin-primary">Upload</button>
 </form>
