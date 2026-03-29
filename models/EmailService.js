@@ -1,7 +1,7 @@
 const { Resend } = require('resend');
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'tranlong@cdimex.com.vn';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'votranlong91@gmail.com';
 const FROM_EMAIL = process.env.FROM_EMAIL || 'Reading Pathway <onboarding@resend.dev>';
 
 let resend = null;
