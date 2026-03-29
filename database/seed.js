@@ -75,7 +75,7 @@ const allContent = {
       col2_title: 'Chương Trình', col3_title: 'Hỗ Trợ', col4_title: 'Liên Hệ',
       contact_zalo: '(+84) 345-037-595', contact_email: 'trophy9@trophy9.com',
       contact_website: 'www.trophy9.com', contact_address: 'TP. Hồ Chí Minh, Việt Nam',
-      copyright: '2026 Reading Pathway. Powered by Trophy9 & Achieve3000.'
+      copyright: '2026 Reading Pathway. Powered By Cdimex Edu Solutions'
     },
     nav: { cta_button: 'Đăng Ký Ngay' },
     b2b: {
@@ -148,7 +148,7 @@ const allContent = {
       col2_title: 'Programs', col3_title: 'Support', col4_title: 'Contact',
       contact_zalo: '(+84) 345-037-595', contact_email: 'trophy9@trophy9.com',
       contact_website: 'www.trophy9.com', contact_address: 'Ho Chi Minh City, Vietnam',
-      copyright: '2026 Reading Pathway. Powered by Trophy9 & Achieve3000.'
+      copyright: '2026 Reading Pathway. Powered By Cdimex Edu Solutions'
     },
     nav: { cta_button: 'Register Now' },
     b2b: {
@@ -221,7 +221,7 @@ const allContent = {
       col2_title: 'ໂປຣແກຣມ', col3_title: 'ຊ່ວຍເຫຼືອ', col4_title: 'ຕິດຕໍ່',
       contact_zalo: '(+84) 345-037-595', contact_email: 'trophy9@trophy9.com',
       contact_website: 'www.trophy9.com', contact_address: 'ນະຄອນໂຮ່ຈີມິນ, ຫວຽດນາມ',
-      copyright: '2026 Reading Pathway. Powered by Trophy9 & Achieve3000.'
+      copyright: '2026 Reading Pathway. Powered By Cdimex Edu Solutions'
     },
     nav: { cta_button: 'ລົງທະບຽນ' },
     b2b: {
@@ -294,7 +294,7 @@ const allContent = {
       col2_title: 'កម្មវិធី', col3_title: 'ជំនួយ', col4_title: 'ទំនាក់ទំនង',
       contact_zalo: '(+84) 345-037-595', contact_email: 'trophy9@trophy9.com',
       contact_website: 'www.trophy9.com', contact_address: 'ទីក្រុងហូជីមិញ, វៀតណាម',
-      copyright: '2026 Reading Pathway. Powered by Trophy9 & Achieve3000.'
+      copyright: '2026 Reading Pathway. Powered By Cdimex Edu Solutions'
     },
     nav: { cta_button: 'ចុះឈ្មោះ' },
     b2b: {
