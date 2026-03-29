@@ -1,0 +1,20 @@
+<%- include('layout', { body: `
+<h1>Quản Lý Nội Dung</h1>
+<p class="subtitle">Chọn ngôn ngữ và section để chỉnh sửa</p>
+
+<div class="lang-tabs">
+    ${Object.entries(languages).map(([code, info]) => `
+        <a href="/admin/sections?lang=${code}" class="lang-tab ${code === lang ? 'active' : ''}">${info.flag} ${info.name}</a>
+    `).join('')}
+</div>
+
+<div class="section-grid-full">
+    ${Object.entries(sections).map(([key, name]) => `
+        <a href="/admin/sections/${key}?lang=${lang}" class="section-card">
+            <div class="section-card-name">${name}</div>
+            <div class="section-card-count">${counts[key]} fields</div>
+            <div class="section-card-arrow">&rarr;</div>
+        </a>
+    `).join('')}
+</div>
+` }) %>

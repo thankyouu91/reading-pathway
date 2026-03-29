@@ -1,0 +1,33 @@
+<%- include('layout', { body: `
+<h1>Quan Ly Hinh Anh</h1>
+
+${success ? '<div class="alert alert-success">Upload thanh cong!</div>' : ''}
+
+<form method="POST" action="/admin/images/upload" enctype="multipart/form-data" class="upload-form">
+    <input type="file" name="image" accept="image/*" required>
+    <button type="submit" class="btn-admin-primary">Upload</button>
+</form>
+
+<h2>Hinh Da Upload</h2>
+<div class="image-grid">
+    ${uploadedImages.length === 0 ? '<p style="color:#94A3B8">Chua co hinh nao</p>' : ''}
+    ${uploadedImages.map(img => `
+        <div class="image-thumb">
+            <img src="/images/uploads/${img}" alt="${img}">
+            <div class="image-name">${img}</div>
+            <code class="image-path">images/uploads/${img}</code>
+        </div>
+    `).join('')}
+</div>
+
+<h2>Hinh Goc</h2>
+<div class="image-grid">
+    ${mainImages.map(img => `
+        <div class="image-thumb">
+            <img src="/images/${img}" alt="${img}" onerror="this.parentElement.style.display='none'">
+            <div class="image-name">${img}</div>
+            <code class="image-path">images/${img}</code>
+        </div>
+    `).join('')}
+</div>
+` }) %>

@@ -1,0 +1,42 @@
+<%- include('layout', { body: `
+<h1>Dashboard</h1>
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon">📬</div>
+        <div class="stat-info">
+            <div class="stat-num">${unreadSubmissions}</div>
+            <div class="stat-label">Chua Doc</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-info">
+            <div class="stat-num">${totalSubmissions}</div>
+            <div class="stat-label">Tong Dang Ky</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">📝</div>
+        <div class="stat-info">
+            <div class="stat-num">${totalContent}</div>
+            <div class="stat-label">Noi Dung</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">📂</div>
+        <div class="stat-info">
+            <div class="stat-num">${Object.keys(sections).length}</div>
+            <div class="stat-label">Sections</div>
+        </div>
+    </div>
+</div>
+
+<h2>Chinh Sua Nhanh</h2>
+<div class="section-grid">
+    ${Object.entries(sections).map(([key, name]) => `
+        <a href="/admin/sections/${key}" class="section-card-link">
+            <div class="section-card-mini">${name}</div>
+        </a>
+    `).join('')}
+</div>
+` }) %>

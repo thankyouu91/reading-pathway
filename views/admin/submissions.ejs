@@ -1,0 +1,48 @@
+<%- include('layout', { body: `
+<div class="edit-header">
+    <h1>Danh Sach Dang Ky (${total})</h1>
+    <a href="/admin/submissions/export" class="btn-admin-outline">📥 Export CSV</a>
+</div>
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Ho Ten</th>
+            <th>SDT</th>
+            <th>Email</th>
+            <th>Do Tuoi</th>
+            <th>Muc Tieu</th>
+            <th>Ngay</th>
+            <th>Trang Thai</th>
+        </tr>
+    </thead>
+    <tbody>
+        ${submissions.length === 0 ? '<tr><td colspan="8" style="text-align:center;padding:40px;color:#94A3B8">Chua co dang ky nao</td></tr>' : ''}
+        ${submissions.map(s => `
+            <tr class="${s.is_read ? '' : 'unread'}">
+                <td>${s.id}</td>
+                <td><strong>${s.parent_name}</strong></td>
+                <td>${s.phone}</td>
+                <td>${s.email}</td>
+                <td>${s.child_age || '-'}</td>
+                <td>${s.goal || '-'}</td>
+                <td>${new Date(s.created_at).toLocaleDateString('vi-VN')}</td>
+                <td>
+                    ${s.is_read ? '<span class="badge badge-read">Da doc</span>' :
+                    `<form method="POST" action="/admin/submissions/${s.id}/read" style="display:inline">
+                        <button type="submit" class="badge badge-unread">Chua doc</button>
+                    </form>`}
+                </td>
+            </tr>
+        `).join('')}
+    </tbody>
+</table>
+
+${totalPages > 1 ? `
+<div class="pagination">
+    ${Array.from({length: totalPages}, (_, i) => i + 1).map(p =>
+        `<a href="/admin/submissions?page=${p}" class="page-link ${p === page ? 'active' : ''}">${p}</a>`
+    ).join('')}
+</div>` : ''}
+` }) %>

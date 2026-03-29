@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="<%= lang %>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Pathway | Trophy9 & Achieve3000</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="premium.css">
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+</head>
+<body>
+<!-- Loading Screen -->
+<div class="loading-screen" id="loadingScreen">
+    <dotlottie-player src="https://lottie.host/4db68bbd-31f6-4cd8-84eb-189572c9015d/AgwVuKgHSr.json" background="transparent" speed="1" style="width:120px;height:120px" loop autoplay></dotlottie-player>
+    <p class="loading-text">Reading Pathway</p>
+</div>
+
+<% const g = (section, key, fallback) => { try { return c[section] && c[section][key] ? c[section][key] : fallback || ''; } catch(e) { return fallback || ''; } }; %>
+<% const list = (section, key) => { try { return JSON.parse(g(section, key, '[]')); } catch(e) { return []; } }; %>
+
+<!-- Navigation -->
+<nav class="navbar" id="navbar">
+    <div class="container nav-container">
+        <a href="/" class="logo">
+            <span class="logo-icon">📖</span>
+            <span class="logo-text">Reading <span class="highlight">Pathway</span></span>
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#program"><%= g('nav','menu_program','Chương Trình') %></a></li>
+            <li><a href="#pathway"><%= g('nav','menu_pathway','Lộ Trình') %></a></li>
+            <li><a href="#trophy9">Trophy9</a></li>
+            <li><a href="#achieve3000">Achieve3000</a></li>
+            <li><a href="#ielts">Pre-IELTS</a></li>
+            <li><a href="#schools"><%= g('nav','menu_schools','Trường Học') %></a></li>
+            <li><a href="#contact" class="btn-nav"><%= g('nav','cta_button','Đăng Ký Ngay') %></a></li>
+        </ul>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+    <div class="container hero-content">
+        <div class="hero-text">
+            <div class="hero-badge"><%= g('hero','badge') %></div>
+            <h1><%= g('hero','heading') %> <span class="gradient-text"><%= g('hero','heading_highlight') %></span> <%= g('hero','heading_suffix') %></h1>
+            <p class="hero-subtitle"><%= g('hero','subtitle') %></p>
+            <div class="hero-logos">
+                <img src="<%= g('hero','logo_trophy9','images/logo-trophy9.svg') %>" alt="Trophy9" class="hero-logo-img">
+                <span class="hero-logo-divider">+</span>
+                <img src="<%= g('hero','logo_achieve3000','images/logo-achieve3000.svg') %>" alt="Achieve3000" class="hero-logo-img">
+            </div>
+            <div class="hero-stats">
+                <% for (let i = 1; i <= 4; i++) { %>
+                <div class="stat">
+                    <span class="stat-number"><%= g('hero','stat_'+i+'_number') %></span>
+                    <span class="stat-label"><%= g('hero','stat_'+i+'_label') %></span>
+                </div>
+                <% } %>
+            </div>
+            <div class="hero-cta">
+                <a href="#contact" class="btn btn-primary btn-lg"><%= g('hero','cta_primary') %></a>
+                <a href="#pathway" class="btn btn-outline btn-lg"><%= g('hero','cta_secondary') %></a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-lottie">
+                <dotlottie-player src="https://lottie.host/f7d3a1c4-5b2e-4f8a-9c6d-8e3b7a2f1d5c/reading-hero.json" background="transparent" speed="1" style="width:100%;max-width:480px" loop autoplay></dotlottie-player>
+            </div>
+            <div class="hero-card-stack">
+                <% for (let i = 1; i <= 4; i++) { const icons = ['🌱','📖','🎯','🎓']; %>
+                <div class="floating-card card-<%= i %>">
+                    <div class="card-icon"><%= icons[i-1] %></div>
+                    <div class="card-label"><%= g('hero','card_'+i+'_label') %></div>
+                    <div class="card-sub"><%= g('hero','card_'+i+'_sub') %></div>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <div class="hero-wave">
+        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 60L48 52C96 44 192 28 288 24C384 20 480 28 576 40C672 52 768 68 864 72C960 76 1056 68 1152 56C1248 44 1344 28 1392 20L1440 12V120H1392C1344 120 1248 120 1152 120C1056 120 960 120 864 120C768 120 672 120 576 120C480 120 384 120 288 120C192 120 96 120 48 120H0V60Z" fill="white"/>
+        </svg>
+    </div>
+</section>
+
+<!-- Program Overview -->
+<section class="section" id="program">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag"><%= g('program','tag') %></span>
+            <h2><%= g('program','heading') %></h2>
+            <p><%= g('program','description') %></p>
+        </div>
+        <div class="program-grid">
+            <div class="program-card trophy-card">
+                <div class="program-card-header">
+                    <img src="images/logo-trophy9.svg" alt="Trophy9" class="program-logo">
+                    <span class="program-age"><%= g('program','trophy_age') %></span>
+                </div>
+                <h3><%= g('program','trophy_heading') %></h3>
+                <p><%= g('program','trophy_description') %></p>
+                <ul class="feature-list">
+                    <% list('program','trophy_features').forEach(item => { %>
+                    <li><span class="check">&#10003;</span> <%= item %></li>
+                    <% }); %>
+                </ul>
+                <a href="<%= g('program','trophy_url','https://www.trophy9.com/') %>" target="_blank" class="btn btn-trophy"><%= g('program','trophy_button') %></a>
+            </div>
+            <div class="program-card achieve-card">
+                <div class="program-card-header">
+                    <img src="images/logo-achieve3000.svg" alt="Achieve3000" class="program-logo">
+                    <span class="program-age"><%= g('program','achieve_age') %></span>
+                </div>
+                <h3><%= g('program','achieve_heading') %></h3>
+                <p><%= g('program','achieve_description') %></p>
+                <ul class="feature-list">
+                    <% list('program','achieve_features').forEach(item => { %>
+                    <li><span class="check">&#10003;</span> <%= item %></li>
+                    <% }); %>
+                </ul>
+                <a href="<%= g('program','achieve_url') %>" target="_blank" class="btn btn-achieve"><%= g('program','achieve_button') %></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Trophy9 - 9 Activities -->
+<section class="section section-trophy-blue" id="trophy9">
+    <div class="container">
+        <div class="section-header light">
+            <img src="images/logo-trophy9.svg" alt="Trophy9" class="section-logo-img trophy-logo-white">
+            <h2><%= g('activities','heading') %></h2>
+            <p><%= g('activities','description') %></p>
+        </div>
+        <div class="activities-grid">
+            <% const actLotties = [
+              'https://lottie.host/2a81dc80-7e9a-4c79-b64f-1d2c5e3f4a5b/book.json',
+              'https://lottie.host/3b92ed91-8fab-5d8a-a75e-2e3d6f4g5b6c/quiz.json',
+              'https://lottie.host/4ca3fe02-9gbc-6e9b-b86f-3f4e7g5h6c7d/vocab.json',
+              'https://lottie.host/5db40f13-ag0d-7fac-c97g-4g5f8h6i7d8e/dictation.json',
+              'https://lottie.host/6ec51024-bh1e-80bd-da8h-5h6g9i7j8e9f/shadow.json',
+              'https://lottie.host/7fd62135-ci2f-91ce-eb9i-6i7h0j8k9f0g/story.json',
+              'https://lottie.host/80e73246-dj3g-a2df-fc0j-7j8i1k9l0g1h/roleplay.json',
+              'https://lottie.host/91f84357-ek4h-b3eg-gd1k-8k9j2l0m1h2i/grammar.json',
+              'https://lottie.host/a2g95468-fl5i-c4fh-he2l-9l0k3m1n2i3j/report.json'
+            ]; %>
+            <% for (let i = 1; i <= 9; i++) { %>
+            <div class="activity-card">
+                <div class="activity-number"><%= i %></div>
+                <h4><%= g('activities','activity_'+i+'_title') %></h4>
+                <p><%= g('activities','activity_'+i+'_desc') %></p>
+            </div>
+            <% } %>
+        </div>
+    </div>
+</section>
+
+<!-- Trophy9 Levels T1-T6 -->
+<section class="section" id="trophy9-levels">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag trophy-tag"><%= g('levels','tag','Trophy9 Levels') %></span>
+            <h2><%= g('levels','heading') %></h2>
+            <p><%= g('levels','description') %></p>
+        </div>
+        <div class="trophy-levels">
+            <% const groups = [
+                { label: g('levels','group_1_label'), name: g('levels','group_1_name'), css: 'walk', levels: ['t1','t2'], badge: 'walk-badge' },
+                { label: g('levels','group_2_label'), name: g('levels','group_2_name'), css: 'run', levels: ['t3','t4'], badge: 'run-badge' },
+                { label: g('levels','group_3_label'), name: g('levels','group_3_name'), css: 'sprint', levels: ['t5','t6'], badge: 'sprint-badge' }
+            ]; %>
+            <% groups.forEach(grp => { %>
+            <div class="level-group">
+                <div class="level-group-header <%= grp.css %>">
+                    <span class="level-group-label"><%= grp.label %></span>
+                    <span class="level-group-name"><%= grp.name %></span>
+                </div>
+                <div class="level-cards-row">
+                    <% grp.levels.forEach(lv => { %>
+                    <div class="level-card">
+                        <div class="level-badge <%= grp.badge %>"><%= lv.toUpperCase() %></div>
+                        <h4><%= g('levels', lv+'_title') %></h4>
+                        <p><%= g('levels', lv+'_desc') %></p>
+                        <div class="level-meta">
+                            <span>9 Steps</span>
+                            <span>4 Readers + 1 Workbook</span>
+                        </div>
+                    </div>
+                    <% }); %>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+    </div>
+</section>
+
+<!-- Learning Pathway -->
+<section class="section section-gray" id="pathway">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag"><%= g('pathway','tag') %></span>
+            <h2><%= g('pathway','heading') %></h2>
+            <p><%= g('pathway','description') %></p>
+        </div>
+        <div class="pathway-timeline">
+            <% const stages = [
+                { n: 1, icon: '🌱', css: 'kindergarten', dotCss: '', lineCss: '' },
+                { n: 2, icon: '📖', css: 'primary', dotCss: '', lineCss: '' },
+                { n: 3, icon: '🎯', css: 'secondary', dotCss: '', lineCss: '' }
+            ]; %>
+            <% stages.forEach(s => { %>
+            <div class="pathway-stage" data-stage="<%= s.n %>">
+                <div class="stage-marker">
+                    <div class="stage-dot <%= s.dotCss %>"></div>
+                    <div class="stage-line <%= s.lineCss %>"></div>
+                </div>
+                <div class="stage-content">
+                    <div class="stage-card <%= s.css %>">
+                        <div class="stage-header">
+                            <span class="stage-icon"><%= s.icon %></span>
+                            <div>
+                                <h3><%= g('pathway','stage_'+s.n+'_title') %></h3>
+                                <span class="stage-platform"><%= g('pathway','stage_'+s.n+'_platform') %></span>
+                            </div>
+                        </div>
+                        <div class="stage-body">
+                            <div class="stage-goals">
+                                <h4><%= lang === 'en' ? 'Goals' : lang === 'lo' ? 'ເປົ້າໝາຍ' : lang === 'km' ? 'គោលដៅ' : 'Mục Tiêu' %></h4>
+                                <ul>
+                                    <% list('pathway','stage_'+s.n+'_goals').forEach(goal => { %>
+                                    <li><%= goal %></li>
+                                    <% }); %>
+                                </ul>
+                            </div>
+                            <div class="stage-details">
+                                <div class="detail-chip"><strong>Lexile:</strong> <%= g('pathway','stage_'+s.n+'_lexile') %></div>
+                                <div class="detail-chip"><strong>CEFR:</strong> <%= g('pathway','stage_'+s.n+'_cefr') %></div>
+                                <div class="detail-chip"><strong><%= g('pathway','stage_'+s.n+'_ielts') ? 'IELTS:' : (lang==='en'?'Skills:':'Kỹ Năng:') %></strong> <%= g('pathway','stage_'+s.n+'_ielts') || g('pathway','stage_'+s.n+'_skills') %></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+
+            <!-- Bridge -->
+            <div class="pathway-bridge">
+                <div class="bridge-content">
+                    <div class="bridge-icon">🔄</div>
+                    <div class="bridge-text">
+                        <strong><%= g('pathway','bridge_title') %></strong>
+                        <p><%= g('pathway','bridge_desc') %></p>
+                    </div>
+                </div>
+            </div>
+
+            <% const stagesAchieve = [
+                { n: 4, icon: '🏆', css: 'highschool' },
+                { n: 5, icon: '🎓', css: 'university' }
+            ]; %>
+            <% stagesAchieve.forEach((s, idx) => { %>
+            <div class="pathway-stage" data-stage="<%= s.n %>">
+                <div class="stage-marker">
+                    <div class="stage-dot achieve-dot"></div>
+                    <% if (idx === 0) { %><div class="stage-line achieve-line"></div><% } %>
+                </div>
+                <div class="stage-content">
+                    <div class="stage-card <%= s.css %>">
+                        <div class="stage-header">
+                            <span class="stage-icon"><%= s.icon %></span>
+                            <div>
+                                <h3><%= g('pathway','stage_'+s.n+'_title') %></h3>
+                                <span class="stage-platform achieve-label"><%= g('pathway','stage_'+s.n+'_platform') %></span>
+                            </div>
+                        </div>
+                        <div class="stage-body">
+                            <div class="stage-goals">
+                                <h4><%= lang === 'en' ? 'Goals' : lang === 'lo' ? 'ເປົ້າໝາຍ' : lang === 'km' ? 'គោលដៅ' : 'Mục Tiêu' %></h4>
+                                <ul>
+                                    <% list('pathway','stage_'+s.n+'_goals').forEach(goal => { %>
+                                    <li><%= goal %></li>
+                                    <% }); %>
+                                </ul>
+                            </div>
+                            <div class="stage-details">
+                                <div class="detail-chip"><strong>Lexile:</strong> <%= g('pathway','stage_'+s.n+'_lexile') %></div>
+                                <div class="detail-chip"><strong>CEFR:</strong> <%= g('pathway','stage_'+s.n+'_cefr') %></div>
+                                <div class="detail-chip"><strong>IELTS:</strong> <%= g('pathway','stage_'+s.n+'_ielts') %></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+    </div>
+</section>
+
+<!-- Achieve3000 Detail -->
+<section class="section section-dark" id="achieve3000">
+    <div class="container">
+        <div class="section-header light">
+            <img src="images/logo-achieve3000.svg" alt="Achieve3000" class="section-logo-img achieve-logo-white">
+            <h2><%= g('achieve3000','heading') %></h2>
+            <p><%= g('achieve3000','description') %></p>
+        </div>
+        <div class="achieve-features">
+            <div class="achieve-feature-main">
+                <div class="lexile-meter">
+                    <div class="meter-label"><%= lang === 'en' ? 'Lexile Score' : 'Chỉ Số Lexile' %></div>
+                    <div class="meter-bar"><div class="meter-fill" id="lexileMeter"></div></div>
+                    <div class="meter-scale"><span>200L</span><span>600L</span><span>1000L</span><span>1400L+</span></div>
+                </div>
+                <h3><%= g('achieve3000','lexile_heading') %></h3>
+                <p><%= g('achieve3000','lexile_description') %></p>
+            </div>
+            <div class="achieve-feature-grid">
+                <% const achieveIcons = ['📰','📈','🎯','💼']; %>
+                <% for (let i = 1; i <= 4; i++) { %>
+                <div class="achieve-card">
+                    <div class="achieve-card-icon"><%= achieveIcons[i-1] %></div>
+                    <h4><%= g('achieve3000','feature_'+i+'_title') %></h4>
+                    <p><%= g('achieve3000','feature_'+i+'_desc') %></p>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pre-IELTS Section -->
+<section class="section" id="ielts">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag ielts-tag"><%= g('ielts','tag') %></span>
+            <h2><%= g('ielts','heading') %></h2>
+            <p><%= g('ielts','description') %></p>
+        </div>
+        <div class="ielts-pathway">
+            <% for (let i = 1; i <= 4; i++) { %>
+            <div class="ielts-stage">
+                <div class="ielts-level">
+                    <span class="ielts-score"><%= g('ielts','stage_'+i+'_score') %></span>
+                    <span class="ielts-name"><%= g('ielts','stage_'+i+'_name') %></span>
+                </div>
+                <div class="ielts-detail">
+                    <p><%= g('ielts','stage_'+i+'_desc') %></p>
+                    <div class="ielts-skills">
+                        <% list('ielts','stage_'+i+'_skills').forEach(skill => { %>
+                        <span><%= skill %></span>
+                        <% }); %>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+</section>
+
+<!-- Comparison Table -->
+<section class="section section-gray" id="compare">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag"><%= g('comparison','tag') %></span>
+            <h2><%= g('comparison','heading') %></h2>
+            <p><%= g('comparison','description') %></p>
+        </div>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th><%= lang === 'en' ? 'Criteria' : lang === 'lo' ? 'ເກນ' : lang === 'km' ? 'លក្ខណៈវិនិច្ឆ័យ' : 'Tiêu Chí' %></th>
+                        <th class="trophy-col">Trophy9</th>
+                        <th class="achieve-col">Achieve3000</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (let i = 1; i <= 6; i++) { %>
+                    <tr>
+                        <td><%= g('comparison','row_'+i+'_label') %></td>
+                        <td><%= g('comparison','row_'+i+'_trophy') %></td>
+                        <td><%= g('comparison','row_'+i+'_achieve') %></td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- B2B Schools Section -->
+<section class="section section-b2b" id="schools">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag b2b-tag"><%= g('b2b','tag') %></span>
+            <h2><%= g('b2b','heading') %></h2>
+            <p><%= g('b2b','description') %></p>
+        </div>
+        <div class="b2b-grid">
+            <% for (let i = 1; i <= 4; i++) { %>
+            <div class="b2b-card">
+                <div class="b2b-icon">
+                    <% const b2bColors = ['#E8F4FD','#FFF1F0','#F0FDF4','#F5F3FF']; %>
+                    <% const b2bFills = ['#0056A6','#C8372D','#10B981','#7C3AED']; %>
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="10" fill="<%= b2bColors[i-1] %>"/><circle cx="20" cy="20" r="8" fill="<%= b2bFills[i-1] %>"/></svg>
+                </div>
+                <h3><%= g('b2b','card_'+i+'_title') %></h3>
+                <p><%= g('b2b','card_'+i+'_desc') %></p>
+                <ul class="b2b-features">
+                    <% list('b2b','card_'+i+'_features').forEach(f => { %>
+                    <li><%= f %></li>
+                    <% }); %>
+                </ul>
+            </div>
+            <% } %>
+        </div>
+
+        <div class="testing-framework">
+            <h3><%= g('b2b','testing_heading') %></h3>
+            <div class="testing-timeline">
+                <% const testColors = ['placement','module','midterm','final']; %>
+                <% for (let i = 1; i <= 4; i++) { %>
+                <div class="test-step">
+                    <div class="test-icon <%= testColors[i-1] %>"><%= ['P','M','G','F'][i-1] %></div>
+                    <div class="test-info">
+                        <h4><%= g('b2b','test_'+i+'_title') %></h4>
+                        <p><%= g('b2b','test_'+i+'_time') %></p>
+                        <span class="test-desc"><%= g('b2b','test_'+i+'_desc') %></span>
+                    </div>
+                </div>
+                <% if (i < 4) { %><div class="test-arrow">→</div><% } %>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="b2b-cta">
+            <p><%= g('b2b','cta_text') %></p>
+            <a href="#contact" class="btn btn-primary btn-lg"><%= g('b2b','cta_button') %></a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA / Contact -->
+<section class="section section-cta" id="contact">
+    <div class="container">
+        <div class="cta-content">
+            <div class="cta-text">
+                <h2><%= g('contact','heading') %></h2>
+                <p><%= g('contact','description') %></p>
+                <ul class="cta-benefits">
+                    <% for (let i = 1; i <= 4; i++) { %>
+                    <li>&#10003; <%= g('contact','benefit_'+i) %></li>
+                    <% } %>
+                </ul>
+                <div class="cta-logos">
+                    <img src="images/logo-trophy9.svg" alt="Trophy9" class="cta-logo-img">
+                    <img src="images/logo-achieve3000.svg" alt="Achieve3000" class="cta-logo-img">
+                </div>
+            </div>
+            <div class="cta-form">
+                <form id="contactForm">
+                    <input type="hidden" name="lang" value="<%= lang %>">
+                    <div class="form-group">
+                        <label for="parentName"><%= g('contact','label_name') %></label>
+                        <input type="text" id="parentName" name="parentName" placeholder="<%= g('contact','placeholder_name') %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone"><%= g('contact','label_phone') %></label>
+                        <input type="tel" id="phone" name="phone" placeholder="<%= g('contact','placeholder_phone') %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email"><%= g('contact','label_email') %></label>
+                        <input type="email" id="email" name="email" placeholder="email@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="childAge"><%= g('contact','label_age') %></label>
+                        <select id="childAge" name="childAge" required>
+                            <option value=""><%= lang === 'en' ? 'Select age' : lang === 'lo' ? 'ເລືອກອາຍຸ' : lang === 'km' ? 'ជ្រើសអាយុ' : 'Chọn độ tuổi' %></option>
+                            <% for (let i = 1; i <= 5; i++) { %>
+                            <option value="<%= i %>"><%= g('contact','age_option_'+i) %></option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="goal"><%= g('contact','label_goal') %></label>
+                        <select id="goal" name="goal">
+                            <option value=""><%= lang === 'en' ? 'Select goal' : lang === 'lo' ? 'ເລືອກເປົ້າໝາຍ' : lang === 'km' ? 'ជ្រើសគោលដៅ' : 'Chọn mục tiêu' %></option>
+                            <% for (let i = 1; i <= 5; i++) { %>
+                            <option value="<%= i %>"><%= g('contact','goal_option_'+i) %></option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block"><%= g('contact','form_button') %></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="logo footer-logo">
+                    <span class="logo-icon">📖</span>
+                    <span class="logo-text">Reading <span class="highlight">Pathway</span></span>
+                </div>
+                <p><%= g('footer','description') %></p>
+                <div class="footer-logos">
+                    <img src="images/logo-trophy9.svg" alt="Trophy9" class="footer-logo-img">
+                    <img src="images/logo-achieve3000.svg" alt="Achieve3000" class="footer-logo-img">
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4><%= g('footer','col2_title') %></h4>
+                <ul>
+                    <li><a href="#trophy9">Trophy9</a></li>
+                    <li><a href="#achieve3000">Achieve3000</a></li>
+                    <li><a href="#ielts">Pre-IELTS & IELTS</a></li>
+                    <li><a href="#pathway"><%= g('pathway','tag') %></a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4><%= g('footer','col3_title') %></h4>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Guide</a></li>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Terms</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4><%= g('footer','col4_title') %></h4>
+                <ul>
+                    <li>Zalo: <%= g('footer','contact_zalo') %></li>
+                    <li>Email: <%= g('footer','contact_email') %></li>
+                    <li>Web: <%= g('footer','contact_website') %></li>
+                    <li><%= g('footer','contact_address') %></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <%= g('footer','copyright') %></p>
+        </div>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

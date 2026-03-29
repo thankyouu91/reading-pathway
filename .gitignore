@@ -1,0 +1,9 @@
+node_modules/
+database/reading-pathway.db
+database/reading-pathway.db-wal
+database/reading-pathway.db-shm
+.env
+*.log
+brochure*
+images/brochure*
+public/images/brochure*

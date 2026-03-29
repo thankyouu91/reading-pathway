@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof pageTitle !== 'undefined' ? pageTitle + ' - ' : '' %>Admin CMS</title>
+    <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body class="admin-body">
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <span>📖</span> CMS Admin
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/admin" class="sidebar-link"><span>📊</span> Dashboard</a>
+            <a href="/admin/sections" class="sidebar-link"><span>📝</span> Noi Dung</a>
+            <a href="/admin/submissions" class="sidebar-link"><span>📬</span> Dang Ky</a>
+            <a href="/admin/images" class="sidebar-link"><span>🖼</span> Hinh Anh</a>
+            <hr>
+            <a href="/" target="_blank" class="sidebar-link"><span>🌐</span> Xem Trang</a>
+            <a href="/admin/logout" class="sidebar-link logout"><span>🚪</span> Dang Xuat</a>
+        </nav>
+        <div class="sidebar-user">
+            👤 <%= typeof user !== 'undefined' ? user : 'admin' %>
+        </div>
+    </aside>
+    <main class="admin-main">
+        <div class="admin-content">
+            <%- body %>
+        </div>
+    </main>
+</body>
+</html>

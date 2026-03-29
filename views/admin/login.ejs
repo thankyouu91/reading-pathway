@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Reading Pathway</title>
+    <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body class="login-body">
+    <div class="login-card">
+        <div class="login-logo">📖 Reading <strong>Pathway</strong></div>
+        <h2>Admin Panel</h2>
+        <% if (error) { %>
+            <div class="alert alert-error"><%= error %></div>
+        <% } %>
+        <form method="POST" action="/admin/login">
+            <div class="form-group">
+                <label>Tai Khoan</label>
+                <input type="text" name="username" required autofocus>
+            </div>
+            <div class="form-group">
+                <label>Mat Khau</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit" class="btn-admin-primary">Dang Nhap</button>
+        </form>
+    </div>
+</body>
+</html>

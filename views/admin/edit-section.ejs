@@ -1,0 +1,46 @@
+<%- include('layout', { body: `
+<div class="edit-header">
+    <a href="/admin/sections?lang=${lang}" class="back-link">&larr; Quay Lại</a>
+    <h1>${sectionName}</h1>
+</div>
+
+<div class="lang-tabs">
+    ${Object.entries(languages).map(([code, info]) => `
+        <a href="/admin/sections/${section}?lang=${code}" class="lang-tab ${code === lang ? 'active' : ''}">${info.flag} ${info.name}</a>
+    `).join('')}
+</div>
+
+${success ? '<div class="alert alert-success">Đã lưu thành công!</div>' : ''}
+${rows.length === 0 ? '<div class="alert alert-error">Chưa có nội dung cho ngôn ngữ này. Vui lòng chạy seed trước.</div>' : ''}
+
+<form method="POST" action="/admin/sections/${section}" class="edit-form">
+    <input type="hidden" name="_lang" value="${lang}">
+    ${rows.map(row => {
+        const isLong = row.content_value.length > 80 || row.content_type === 'html' || row.content_type === 'list';
+        const isImage = row.content_type === 'image';
+        return `
+        <div class="field-group ${isImage ? 'field-image' : ''}">
+            <label class="field-label">
+                <span class="field-key">${row.content_key}</span>
+                <span class="field-type">${row.content_type}</span>
+            </label>
+            ${isImage ? `
+                <div class="image-preview">
+                    <img src="/${row.content_value}" alt="${row.content_key}" onerror="this.style.display='none'">
+                </div>
+                <input type="text" name="${row.content_key}" value="${row.content_value.replace(/"/g, '&quot;')}" class="field-input">
+            ` : isLong ? `
+                <textarea name="${row.content_key}" class="field-textarea" rows="4">${row.content_value}</textarea>
+            ` : `
+                <input type="text" name="${row.content_key}" value="${row.content_value.replace(/"/g, '&quot;')}" class="field-input">
+            `}
+        </div>`;
+    }).join('')}
+
+    ${rows.length > 0 ? `
+    <div class="form-actions">
+        <button type="submit" class="btn-admin-primary">💾 Lưu Thay Đổi</button>
+        <a href="/?lang=${lang}" target="_blank" class="btn-admin-outline">🌐 Xem Trang (${lang.toUpperCase()})</a>
+    </div>` : ''}
+</form>
+` }) %>
