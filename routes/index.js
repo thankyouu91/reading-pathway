@@ -24,6 +24,11 @@ router.get('/', (req, res) => {
   res.render('landing', { c, lang, languages: db.LANGUAGES, siteUrl: SITE_URL });
 });
 
+// Google Search Console verification
+router.get('/google28ee83266684b88b.html', (req, res) => {
+  res.send('google-site-verification: google28ee83266684b88b.html');
+});
+
 // Sitemap
 router.get('/sitemap.xml', (req, res) => {
   res.set('Content-Type', 'application/xml');
