@@ -482,49 +482,7 @@
     .proof-stat:last-child { border-bottom: none; }
 }
 
-/* ===== STICKY MOBILE CTA ===== */
-@media (max-width: 768px) {
-    .mobile-sticky-cta {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 999;
-        background: white;
-        padding: var(--space-3) var(--space-4);
-        box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
-        border-top: 1px solid var(--border-default, #E2E8F0);
-        display: flex;
-        gap: var(--space-2);
-        transform: translateY(100%);
-        transition: transform 0.3s var(--ease);
-    }
-
-    .mobile-sticky-cta.visible {
-        transform: translateY(0);
-    }
-
-    .mobile-sticky-cta .btn {
-        flex: 1;
-        text-align: center;
-        padding: 12px;
-        border-radius: var(--radius-btn);
-        font-weight: 700;
-        font-size: var(--text-sm);
-        text-decoration: none;
-    }
-
-    .mobile-sticky-cta .btn-primary {
-        background: var(--color-secondary-500) !important;
-        color: white;
-    }
-
-    .mobile-sticky-cta .btn-secondary {
-        background: var(--surface-secondary, #F8FAFC);
-        color: var(--color-primary-500);
-        border: 1px solid var(--border-default, #E2E8F0);
-    }
-}
+/* (Mobile sticky CTA removed per user request) */
 
 /* ===== FOOTER CLEANUP ===== */
 .footer {
@@ -545,6 +503,47 @@
 /* ===== DARK SECTION (Achieve3000) ===== */
 .section-dark {
     background: linear-gradient(180deg, var(--color-neutral-900), var(--color-neutral-950, #0C1220));
+}
+
+.section-dark .section-header h2,
+.section-dark .section-header p,
+.section-dark h2, .section-dark h3, .section-dark h4,
+.section-dark .achieve-feature-main h3,
+.section-dark .achieve-feature-main p,
+.section-dark .achieve-card h4,
+.section-dark .achieve-card p,
+.section-dark .meter-label,
+.section-dark .meter-scale span {
+    color: white !important;
+}
+
+.section-dark .section-header p,
+.section-dark .achieve-feature-main p,
+.section-dark .achieve-card p,
+.section-dark .meter-scale span {
+    opacity: 0.75;
+}
+
+.section-dark .section-header h2::after {
+    background: var(--color-secondary-500);
+}
+
+/* ===== ACTIVITIES (Blue) TEXT FIX ===== */
+.section-trophy-blue .section-header h2,
+.section-trophy-blue .section-header p,
+.section-trophy-blue h2, .section-trophy-blue h4,
+.section-trophy-blue .activity-card h4,
+.section-trophy-blue .activity-card p {
+    color: white !important;
+}
+
+.section-trophy-blue .section-header p,
+.section-trophy-blue .activity-card p {
+    opacity: 0.8;
+}
+
+.section-trophy-blue .section-header h2::after {
+    background: rgba(255,255,255,0.5);
 }
 
 /* ===== ACTIVITIES SECTION ===== */

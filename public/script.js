@@ -94,14 +94,6 @@ if (scrollIndicator) {
     }, { passive: true });
 }
 
-// ===== MOBILE STICKY CTA =====
-const mobileCta = document.getElementById('mobileCta');
-if (mobileCta && window.innerWidth <= 768) {
-    window.addEventListener('scroll', () => {
-        mobileCta.classList.toggle('visible', window.scrollY > 500);
-    }, { passive: true });
-}
-
 // ===== NAVBAR SCROLL =====
 const navbar = document.getElementById('navbar');
 let lastScrollY = 0;
