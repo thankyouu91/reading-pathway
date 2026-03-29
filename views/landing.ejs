@@ -228,43 +228,18 @@
             </div>
         </div>
         <div class="hero-visual">
-            <!-- Interactive Journey Path -->
-            <div class="journey-path" id="journeyPath">
-                <svg class="journey-line" viewBox="0 0 400 500" fill="none">
-                    <path id="journeyPathSvg" d="M200 30 C200 30,80 100,80 140 C80 180,320 200,320 240 C320 280,80 320,80 360 C80 400,200 440,200 470" stroke="url(#journeyGrad)" stroke-width="3" stroke-dasharray="8 6" fill="none" opacity="0.4"/>
-                    <defs>
-                        <linearGradient id="journeyGrad" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stop-color="#10B981"/>
-                            <stop offset="33%" stop-color="#0056A6"/>
-                            <stop offset="66%" stop-color="#C8372D"/>
-                            <stop offset="100%" stop-color="#7C3AED"/>
-                        </linearGradient>
-                    </defs>
-                </svg>
-
-                <% const journeyCards = [
-                    { i: 1, icon: '🌒', color: '#10B981', x: '55%', y: '2%' },
-                    { i: 2, icon: '📖', color: '#0056A6', x: '8%', y: '23%' },
-                    { i: 3, icon: '🎯', color: '#F59E0B', x: '55%', y: '45%' },
-                    { i: 4, icon: '🎓', color: '#7C3AED', x: '12%', y: '70%' }
-                ]; %>
-                <% journeyCards.forEach(jc => { %>
-                <div class="journey-card" data-card="<%= jc.i %>" style="left:<%= jc.x %>;top:<%= jc.y %>;--card-color:<%= jc.color %>">
-                    <div class="journey-card-inner">
-                        <div class="journey-card-front">
-                            <span class="journey-icon"><%= jc.icon %></span>
-                            <span class="journey-label"><%= g('hero','card_'+jc.i+'_label') %></span>
-                        </div>
-                        <div class="journey-card-back">
-                            <span class="journey-sub"><%= g('hero','card_'+jc.i+'_sub') %></span>
-                        </div>
-                    </div>
-                    <div class="journey-pulse"></div>
+            <div class="hero-image-stack">
+                <!-- Main hero image -->
+                <div class="hero-img-main">
+                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80" alt="Học sinh đọc sách" loading="eager">
                 </div>
-                <% }); %>
-
-                <!-- Animated traveler dot -->
-                <div class="journey-traveler" id="journeyTraveler"></div>
+                <!-- Floating accent images -->
+                <div class="hero-img-accent hero-img-1">
+                    <img src="https://images.unsplash.com/photo-1588075592446-265fd1e6e76f?w=300&q=80" alt="Trẻ em học tiếng Anh">
+                </div>
+                <div class="hero-img-accent hero-img-2">
+                    <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=300&q=80" alt="Sinh viên học tập">
+                </div>
             </div>
         </div>
     </div>
@@ -279,6 +254,12 @@
         <span>Cuon xuong</span>
     </div>
 </section>
+
+<!-- Photo divider -->
+<div class="photo-divider">
+    <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=1400&q=70&h=200&fit=crop&crop=center" alt="Classroom" loading="lazy">
+    <div class="photo-divider-overlay"></div>
+</div>
 
 <!-- Program Overview -->
 <section class="section" id="program">
@@ -603,6 +584,12 @@
     </div>
 </section>
 
+<!-- Photo divider -->
+<div class="photo-divider">
+    <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1400&q=70&h=200&fit=crop&crop=center" alt="Students" loading="lazy">
+    <div class="photo-divider-overlay"></div>
+</div>
+
 <!-- Solutions for Schools - Strategic Value -->
 <section class="section section-solutions" id="solutions">
     <div class="container">
@@ -819,6 +806,12 @@
         </div>
     </div>
 </section>
+
+<!-- Photo divider -->
+<div class="photo-divider">
+    <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1400&q=70&h=200&fit=crop&crop=center" alt="Books and learning" loading="lazy">
+    <div class="photo-divider-overlay"></div>
+</div>
 
 <!-- CTA / Contact -->
 <section class="section section-cta" id="contact">
