@@ -333,6 +333,27 @@ function applyMotionAttributes() {
         el.style.transition = 'all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
     });
 
+    // Solutions section
+    document.querySelectorAll('.solutions-problem-box').forEach(el => {
+        el.setAttribute('data-motion', 'fade-up');
+        el.style.transition = 'all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    });
+    document.querySelectorAll('.pillar-card').forEach((el, i) => {
+        el.setAttribute('data-motion', 'fade-up');
+        el.style.transition = `all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+        el.style.transitionDelay = `${i * 0.15}s`;
+    });
+    document.querySelectorAll('.why-card').forEach((el, i) => {
+        el.setAttribute('data-motion', 'scale-up');
+        el.style.transition = `all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+        el.style.transitionDelay = `${i * 0.08}s`;
+    });
+    document.querySelectorAll('.proof-stat').forEach((el, i) => {
+        el.setAttribute('data-motion', 'fade-up');
+        el.style.transition = `all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+        el.style.transitionDelay = `${i * 0.12}s`;
+    });
+
     // Test steps - stagger
     document.querySelectorAll('.test-step').forEach((el, i) => {
         el.setAttribute('data-motion', 'fade-up');
