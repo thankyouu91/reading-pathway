@@ -71,7 +71,7 @@ const allContent = {
       goal_option_4: 'Học Thuật', goal_option_5: 'Tất Cả'
     },
     footer: {
-      description: 'Con đường đọc hiểu toàn diện từ Mầm Non đến Đại Học. Xây dựng nền tảng ngôn ngữ vững chắc cho tương lai.',
+      description: 'Nền tảng tăng cường đọc hiểu và luyện kèm 4 kỹ năng, giải pháp giáo dục theo Đề án Quyết định 2371/QĐ-TTg "Đưa tiếng Anh thành ngôn ngữ thứ hai trong trường học 2025 - 2035".',
       col2_title: 'Chương Trình', col3_title: 'Hỗ Trợ', col4_title: 'Liên Hệ',
       contact_zalo: '+84 93 736 03391', contact_email: 'Tranlong@cdimex.com.vn',
       contact_website: 'www.Cdimex.com.vn', contact_address: 'TP. Hồ Chí Minh, Việt Nam',
