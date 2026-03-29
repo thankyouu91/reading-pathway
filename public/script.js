@@ -7,6 +7,93 @@ window.addEventListener('load', () => {
     }
 });
 
+// ===== HERO PARTICLES =====
+const canvas = document.getElementById('heroParticles');
+if (canvas) {
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const colors = ['rgba(0,86,166,0.3)', 'rgba(200,55,45,0.2)', 'rgba(16,185,129,0.25)', 'rgba(124,58,237,0.2)'];
+
+    function resizeCanvas() {
+        canvas.width = canvas.parentElement.offsetWidth;
+        canvas.height = canvas.parentElement.offsetHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+        constructor() { this.reset(); }
+        reset() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 3 + 1;
+            this.speedX = (Math.random() - 0.5) * 0.5;
+            this.speedY = (Math.random() - 0.5) * 0.3;
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.opacity = Math.random() * 0.5 + 0.1;
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = this.opacity;
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    for (let i = 0; i < 50; i++) particles.push(new Particle());
+
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => { p.update(); p.draw(); });
+
+        // Draw connections
+        for (let a = 0; a < particles.length; a++) {
+            for (let b = a + 1; b < particles.length; b++) {
+                const dx = particles[a].x - particles[b].x;
+                const dy = particles[a].y - particles[b].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 120) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[a].x, particles[a].y);
+                    ctx.lineTo(particles[b].x, particles[b].y);
+                    ctx.strokeStyle = `rgba(0,86,166,${0.06 * (1 - dist/120)})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+}
+
+// ===== HERO MOUSE GLOW =====
+const heroGlow = document.getElementById('heroGlow');
+const heroSection = document.getElementById('hero');
+if (heroGlow && heroSection) {
+    heroSection.addEventListener('mousemove', (e) => {
+        const rect = heroSection.getBoundingClientRect();
+        heroGlow.style.left = (e.clientX - rect.left) + 'px';
+        heroGlow.style.top = (e.clientY - rect.top) + 'px';
+    });
+}
+
+// ===== SCROLL INDICATOR HIDE =====
+const scrollIndicator = document.getElementById('scrollIndicator');
+if (scrollIndicator) {
+    window.addEventListener('scroll', () => {
+        scrollIndicator.style.opacity = window.scrollY > 100 ? '0' : '0.5';
+        scrollIndicator.style.pointerEvents = window.scrollY > 100 ? 'none' : 'auto';
+    }, { passive: true });
+}
+
 // ===== NAVBAR SCROLL =====
 const navbar = document.getElementById('navbar');
 let lastScrollY = 0;

@@ -189,20 +189,22 @@
     </div>
 </nav>
 
-<!-- Hero Section -->
-<section class="hero">
-    <div class="hero-bg-shapes">
-        <div class="shape shape-1"></div>
-        <div class="shape shape-2"></div>
-        <div class="shape shape-3"></div>
-    </div>
-    <!-- Floating side illustrations -->
-    <img src="https://stories.freepiklabs.com/storage/4525/book-lover-01.svg" alt="" class="hero-side-illus hero-illus-left" loading="lazy">
-    <img src="https://stories.freepiklabs.com/storage/32390/Online-Learning_Artboard-1-copy.svg" alt="" class="hero-side-illus hero-illus-right" loading="lazy">
+<!-- Hero Section - Interactive -->
+<section class="hero" id="hero">
+    <!-- Animated particles background -->
+    <canvas id="heroParticles" class="hero-particles"></canvas>
+
+    <!-- Mouse-follow glow -->
+    <div class="hero-glow" id="heroGlow"></div>
+
     <div class="container hero-content">
         <div class="hero-text">
             <div class="hero-badge"><%= g('hero','badge') %></div>
-            <h1><%= g('hero','heading') %> <span class="gradient-text"><%= g('hero','heading_highlight') %></span> <%= g('hero','heading_suffix') %></h1>
+            <h1 class="hero-title-animated">
+                <span class="title-word" style="--delay:0"><%= g('hero','heading') %></span>
+                <span class="title-word gradient-text" style="--delay:1"><%= g('hero','heading_highlight') %></span>
+                <span class="title-word" style="--delay:2"><%= g('hero','heading_suffix') %></span>
+            </h1>
             <p class="hero-subtitle"><%= g('hero','subtitle') %></p>
             <div class="hero-logos">
                 <img src="<%= g('hero','logo_trophy9','images/logo-trophy9.svg') %>" alt="Trophy9" class="hero-logo-img">
@@ -211,26 +213,55 @@
             </div>
             <div class="hero-stats">
                 <% for (let i = 1; i <= 4; i++) { %>
-                <div class="stat">
+                <div class="stat" style="--delay:<%= i %>">
                     <span class="stat-number"><%= g('hero','stat_'+i+'_number') %></span>
                     <span class="stat-label"><%= g('hero','stat_'+i+'_label') %></span>
                 </div>
                 <% } %>
             </div>
             <div class="hero-cta">
-                <a href="#contact" class="btn btn-primary btn-lg"><%= g('hero','cta_primary') %></a>
+                <a href="#contact" class="btn btn-primary btn-lg btn-glow"><%= g('hero','cta_primary') %></a>
                 <a href="#pathway" class="btn btn-outline btn-lg"><%= g('hero','cta_secondary') %></a>
             </div>
         </div>
         <div class="hero-visual">
-            <div class="hero-card-stack">
-                <% for (let i = 1; i <= 4; i++) { const icons = ['🌱','📖','🎯','🎓']; %>
-                <div class="floating-card card-<%= i %>">
-                    <div class="card-icon"><%= icons[i-1] %></div>
-                    <div class="card-label"><%= g('hero','card_'+i+'_label') %></div>
-                    <div class="card-sub"><%= g('hero','card_'+i+'_sub') %></div>
+            <!-- Interactive Journey Path -->
+            <div class="journey-path" id="journeyPath">
+                <svg class="journey-line" viewBox="0 0 400 500" fill="none">
+                    <path id="journeyPathSvg" d="M200 30 C200 30,80 100,80 140 C80 180,320 200,320 240 C320 280,80 320,80 360 C80 400,200 440,200 470" stroke="url(#journeyGrad)" stroke-width="3" stroke-dasharray="8 6" fill="none" opacity="0.4"/>
+                    <defs>
+                        <linearGradient id="journeyGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#10B981"/>
+                            <stop offset="33%" stop-color="#0056A6"/>
+                            <stop offset="66%" stop-color="#C8372D"/>
+                            <stop offset="100%" stop-color="#7C3AED"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+
+                <% const journeyCards = [
+                    { i: 1, icon: '🌒', color: '#10B981', x: '55%', y: '2%' },
+                    { i: 2, icon: '📖', color: '#0056A6', x: '8%', y: '23%' },
+                    { i: 3, icon: '🎯', color: '#F59E0B', x: '55%', y: '45%' },
+                    { i: 4, icon: '🎓', color: '#7C3AED', x: '12%', y: '70%' }
+                ]; %>
+                <% journeyCards.forEach(jc => { %>
+                <div class="journey-card" data-card="<%= jc.i %>" style="left:<%= jc.x %>;top:<%= jc.y %>;--card-color:<%= jc.color %>">
+                    <div class="journey-card-inner">
+                        <div class="journey-card-front">
+                            <span class="journey-icon"><%= jc.icon %></span>
+                            <span class="journey-label"><%= g('hero','card_'+jc.i+'_label') %></span>
+                        </div>
+                        <div class="journey-card-back">
+                            <span class="journey-sub"><%= g('hero','card_'+jc.i+'_sub') %></span>
+                        </div>
+                    </div>
+                    <div class="journey-pulse"></div>
                 </div>
-                <% } %>
+                <% }); %>
+
+                <!-- Animated traveler dot -->
+                <div class="journey-traveler" id="journeyTraveler"></div>
             </div>
         </div>
     </div>
@@ -238,6 +269,11 @@
         <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0 60L48 52C96 44 192 28 288 24C384 20 480 28 576 40C672 52 768 68 864 72C960 76 1056 68 1152 56C1248 44 1344 28 1392 20L1440 12V120H1392C1344 120 1248 120 1152 120C1056 120 960 120 864 120C768 120 672 120 576 120C480 120 384 120 288 120C192 120 96 120 48 120H0V60Z" fill="white"/>
         </svg>
+    </div>
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator" id="scrollIndicator">
+        <div class="scroll-mouse"><div class="scroll-dot"></div></div>
+        <span>Cuon xuong</span>
     </div>
 </section>
 
