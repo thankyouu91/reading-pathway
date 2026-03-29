@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
@@ -8,18 +7,21 @@ const crypto = require('crypto');
 const db = require('../database/db');
 const requireAuth = require('../middleware/auth');
 const rateLimit = require('express-rate-limit');
-const createDOMPurify = require('isomorphic-dompurify');
-const DOMPurify = createDOMPurify;
 
-// Login rate limit: 5 attempts per 15 minutes
+// Models
+const User = require('../models/User');
+const Content = require('../models/Content');
+const Submission = require('../models/Submission');
+const BlogPost = require('../models/BlogPost');
+
+// Login rate limit
 const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 5 });
 
-// Account lockout tracking (in-memory) with auto-cleanup
+// Lockout with auto-cleanup
 const loginAttempts = new Map();
 const LOCKOUT_THRESHOLD = 5;
 const LOCKOUT_DURATION = 15 * 60 * 1000;
 
-// Cleanup stale entries every 5 minutes to prevent memory leak
 setInterval(() => {
   const now = Date.now();
   for (const [key, record] of loginAttempts) {
@@ -27,91 +29,46 @@ setInterval(() => {
   }
 }, 5 * 60 * 1000);
 
-function checkLockout(username) {
-  const record = loginAttempts.get(username);
-  if (!record) return false;
-  if (record.count >= LOCKOUT_THRESHOLD) {
-    if (Date.now() - record.lastAttempt < LOCKOUT_DURATION) return true;
-    loginAttempts.delete(username);
-  }
-  return false;
-}
+function checkLockout(u) { const r = loginAttempts.get(u); if (!r) return false; if (r.count >= LOCKOUT_THRESHOLD && Date.now() - r.lastAttempt < LOCKOUT_DURATION) return true; if (r.count >= LOCKOUT_THRESHOLD) loginAttempts.delete(u); return false; }
+function recordFail(u) { const r = loginAttempts.get(u) || { count: 0, lastAttempt: 0 }; r.count++; r.lastAttempt = Date.now(); loginAttempts.set(u, r); }
 
-function recordFailedLogin(username) {
-  const record = loginAttempts.get(username) || { count: 0, lastAttempt: 0 };
-  record.count++;
-  record.lastAttempt = Date.now();
-  loginAttempts.set(username, record);
-}
-
-function clearLoginAttempts(username) {
-  loginAttempts.delete(username);
-}
-
-// CSRF check middleware
+// CSRF
 function csrfCheck(req, res, next) {
   const token = req.body._csrf;
-  if (!token || token !== req.session.csrfToken) {
-    return res.status(403).send('Phien lam viec khong hop le. Vui long tai lai trang.');
-  }
+  if (!token || token !== req.session.csrfToken) return res.status(403).send('Phien khong hop le. Tai lai trang.');
   next();
 }
 
-// File upload with sanitized filename
+// Upload
 const storage = multer.diskStorage({
   destination: path.join(__dirname, '..', 'public', 'images', 'uploads'),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    const safeName = crypto.randomBytes(8).toString('hex') + ext;
-    cb(null, safeName);
-  }
+  filename: (req, file, cb) => cb(null, crypto.randomBytes(8).toString('hex') + path.extname(file.originalname).toLowerCase())
 });
-
-const upload = multer({
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
+const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    const allowedExt = /\.(jpeg|jpg|png|svg|webp|gif)$/i;
-    const allowedMime = /^image\/(jpeg|png|svg\+xml|webp|gif)$/;
-    if (allowedExt.test(path.extname(file.originalname)) && allowedMime.test(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Chi chap nhan file hinh anh'));
-    }
+    cb(null, /\.(jpeg|jpg|png|svg|webp|gif)$/i.test(path.extname(file.originalname)) && /^image\//.test(file.mimetype));
   }
 });
 
-// Section names
 const SECTIONS = {
-  nav: 'Navigation', hero: 'Hero Banner', program: 'Tong Quan Chuong Trinh',
-  activities: '9 Hoat Dong Trophy9', levels: 'Cap Do T1-T6',
-  pathway: 'Lo Trinh Hoc', achieve3000: 'Achieve3000',
-  ielts: 'Pre-IELTS & IELTS', comparison: 'Bang So Sanh',
-  b2b: 'Truong Hoc & Trung Tam', contact: 'Lien He & Form', footer: 'Footer'
+  nav: 'Navigation', hero: 'Hero Banner', program: 'Tổng Quan Chương Trình',
+  activities: '9 Hoạt Động Trophy9', levels: 'Cấp Độ T1-T6',
+  pathway: 'Lộ Trình Học', achieve3000: 'Achieve3000',
+  ielts: 'Pre-IELTS & IELTS', comparison: 'Bảng So Sánh',
+  b2b: 'Trường Học & Trung Tâm', contact: 'Liên Hệ & Form', footer: 'Footer'
 };
 
 // ===== LOGIN =====
-router.get('/login', (req, res) => {
-  res.render('admin/login', { error: null, csrfToken: res.locals.csrfToken });
-});
+router.get('/login', (req, res) => res.render('admin/login', { error: null, csrfToken: res.locals.csrfToken }));
 
 router.post('/login', loginLimiter, csrfCheck, async (req, res) => {
   const { username, password } = req.body;
+  if (checkLockout(username || '')) return res.render('admin/login', { error: 'Tài khoản bị khóa 15 phút.', csrfToken: res.locals.csrfToken });
 
-  if (checkLockout(username || '')) {
-    return res.render('admin/login', {
-      error: 'Tai khoan bi khoa tam thoi. Vui long thu lai sau 15 phut.',
-      csrfToken: res.locals.csrfToken
-    });
-  }
-
-  const user = db.prepare('SELECT * FROM admin_users WHERE username = ?').get(username);
-
-  if (user && await bcrypt.compare(password || '', user.password_hash)) {
-    clearLoginAttempts(username);
-    // Regenerate session to prevent fixation
-    const adminId = user.id;
-    const adminUser = user.username;
+  const user = User.findByUsername(username);
+  if (user && await User.verifyPassword(password, user.password_hash)) {
+    loginAttempts.delete(username);
+    const adminId = user.id, adminUser = user.username;
     req.session.regenerate((err) => {
       if (err) return res.status(500).send('Login error');
       req.session.adminId = adminId;
@@ -120,77 +77,51 @@ router.post('/login', loginLimiter, csrfCheck, async (req, res) => {
       res.redirect('/admin');
     });
   } else {
-    recordFailedLogin(username || 'unknown');
-    res.render('admin/login', {
-      error: 'Sai tai khoan hoac mat khau',
-      csrfToken: res.locals.csrfToken
-    });
+    recordFail(username || 'unknown');
+    res.render('admin/login', { error: 'Sai tài khoản hoặc mật khẩu', csrfToken: res.locals.csrfToken });
   }
 });
 
-router.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.redirect('/admin/login');
-});
+router.get('/logout', (req, res) => { req.session.destroy(() => res.redirect('/admin/login')); });
 
 // ===== DASHBOARD =====
 router.get('/', requireAuth, (req, res) => {
-  const totalSubmissions = db.prepare('SELECT COUNT(*) as count FROM submissions').get().count;
-  const unreadSubmissions = db.prepare('SELECT COUNT(*) as count FROM submissions WHERE is_read = 0').get().count;
-  const totalContent = db.prepare('SELECT COUNT(*) as count FROM content').get().count;
   res.render('admin/dashboard', {
     user: req.session.adminUser, sections: SECTIONS,
-    totalSubmissions, unreadSubmissions, totalContent
+    totalSubmissions: Submission.countTotal(),
+    unreadSubmissions: Submission.countUnread(),
+    totalContent: db.prepare('SELECT COUNT(*) as c FROM content').get().c
   });
 });
 
 // ===== SECTIONS =====
 router.get('/sections', requireAuth, (req, res) => {
   const lang = req.query.lang || 'vi';
-  const rows = db.prepare('SELECT section, COUNT(*) as count FROM content WHERE lang = ? GROUP BY section').all(lang);
-  const counts = {};
-  for (const key of Object.keys(SECTIONS)) counts[key] = 0;
-  rows.forEach(r => { counts[r.section] = r.count; });
+  const counts = Content.countBySection(lang);
+  for (const key of Object.keys(SECTIONS)) if (!counts[key]) counts[key] = 0;
   res.render('admin/sections', { sections: SECTIONS, counts, user: req.session.adminUser, lang, languages: db.LANGUAGES });
 });
 
 router.get('/sections/:section', requireAuth, (req, res) => {
-  const section = req.params.section;
+  const { section } = req.params;
   const lang = req.query.lang || 'vi';
   if (!SECTIONS[section]) return res.redirect('/admin/sections');
-
-  const rows = db.prepare('SELECT * FROM content WHERE section = ? AND lang = ? ORDER BY sort_order').all(section, lang);
-  res.render('admin/edit-section', {
-    section, sectionName: SECTIONS[section], rows, lang,
-    languages: db.LANGUAGES, user: req.session.adminUser,
-    success: req.query.success === '1', csrfToken: res.locals.csrfToken
-  });
+  const rows = Content.getBySection(section, lang);
+  res.render('admin/edit-section', { section, sectionName: SECTIONS[section], rows, lang, languages: db.LANGUAGES, user: req.session.adminUser, success: req.query.success === '1', csrfToken: res.locals.csrfToken });
 });
 
 router.post('/sections/:section', requireAuth, csrfCheck, (req, res) => {
-  const section = req.params.section;
-  if (!SECTIONS[section]) return res.status(400).send('Invalid section');
-
+  const { section } = req.params;
+  if (!SECTIONS[section]) return res.status(400).send('Invalid');
   const lang = req.body._lang || 'vi';
-  const updates = { ...req.body };
-  delete updates._lang;
-  delete updates._csrf;
-
-  const stmt = db.prepare('UPDATE content SET content_value = ?, updated_at = CURRENT_TIMESTAMP WHERE lang = ? AND section = ? AND content_key = ?');
-  const updateAll = db.transaction(() => {
-    for (const [key, value] of Object.entries(updates)) {
-      const sanitized = DOMPurify.sanitize(value, { ALLOWED_TAGS: [] });
-      stmt.run(sanitized, lang, section, key);
-    }
-  });
-  updateAll();
+  const updates = { ...req.body }; delete updates._lang; delete updates._csrf;
+  Content.updateBatch(section, updates, lang);
   res.redirect(`/admin/sections/${section}?lang=${lang}&success=1`);
 });
 
 // ===== BLOG =====
 router.get('/blog', requireAuth, (req, res) => {
-  const posts = db.prepare('SELECT * FROM blog_posts ORDER BY created_at DESC').all();
-  res.render('admin/blog', { posts, user: req.session.adminUser, csrfToken: res.locals.csrfToken });
+  res.render('admin/blog', { posts: BlogPost.findAll(), user: req.session.adminUser, csrfToken: res.locals.csrfToken });
 });
 
 router.get('/blog/new', requireAuth, (req, res) => {
@@ -198,69 +129,38 @@ router.get('/blog/new', requireAuth, (req, res) => {
 });
 
 router.get('/blog/edit/:id', requireAuth, (req, res) => {
-  const post = db.prepare('SELECT * FROM blog_posts WHERE id = ?').get(req.params.id);
+  const post = BlogPost.findById(req.params.id);
   if (!post) return res.redirect('/admin/blog');
   res.render('admin/blog-edit', { post, user: req.session.adminUser, csrfToken: res.locals.csrfToken });
 });
 
 router.post('/blog/save', requireAuth, csrfCheck, (req, res) => {
-  const { id, title, slug, excerpt, content, cover_image, meta_description, meta_keywords, is_published } = req.body;
-  const cleanSlug = (slug || title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-
-  // Sanitize blog content - whitelist safe HTML tags
-  const cleanTitle = DOMPurify.sanitize(title, { ALLOWED_TAGS: [] });
-  const cleanExcerpt = DOMPurify.sanitize(excerpt, { ALLOWED_TAGS: [] });
-  const cleanContent = DOMPurify.sanitize(content, {
-    ALLOWED_TAGS: ['p','br','h1','h2','h3','h4','h5','h6','ul','ol','li','a','strong','em','img','blockquote','pre','code','table','tr','td','th','thead','tbody','span'],
-    ALLOWED_ATTR: ['href','src','alt','class','target','style','width','height']
-  });
-  const cleanMeta = DOMPurify.sanitize(meta_description || '', { ALLOWED_TAGS: [] });
-  const cleanKeywords = DOMPurify.sanitize(meta_keywords || '', { ALLOWED_TAGS: [] });
-
-  if (id) {
-    db.prepare('UPDATE blog_posts SET title=?, slug=?, excerpt=?, content=?, cover_image=?, meta_description=?, meta_keywords=?, is_published=?, updated_at=CURRENT_TIMESTAMP WHERE id=?')
-      .run(cleanTitle, cleanSlug, cleanExcerpt, cleanContent, cover_image || '', cleanMeta, cleanKeywords, is_published ? 1 : 0, id);
-  } else {
-    db.prepare('INSERT INTO blog_posts (title, slug, excerpt, content, cover_image, meta_description, meta_keywords, is_published) VALUES (?,?,?,?,?,?,?,?)')
-      .run(cleanTitle, cleanSlug, cleanExcerpt, cleanContent, cover_image || '', cleanMeta, cleanKeywords, is_published ? 1 : 0);
-  }
+  BlogPost.save(req.body);
   res.redirect('/admin/blog');
 });
 
 router.post('/blog/delete/:id', requireAuth, csrfCheck, (req, res) => {
-  db.prepare('DELETE FROM blog_posts WHERE id = ?').run(req.params.id);
+  BlogPost.delete(req.params.id);
   res.redirect('/admin/blog');
 });
 
 // ===== SUBMISSIONS =====
 router.get('/submissions', requireAuth, (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = 20;
-  const offset = (page - 1) * limit;
-  const total = db.prepare('SELECT COUNT(*) as count FROM submissions').get().count;
-  const submissions = db.prepare('SELECT * FROM submissions ORDER BY created_at DESC LIMIT ? OFFSET ?').all(limit, offset);
-  res.render('admin/submissions', {
-    submissions, page, totalPages: Math.ceil(total / limit), total,
-    user: req.session.adminUser, csrfToken: res.locals.csrfToken
-  });
+  const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+  const { rows: submissions, total, totalPages } = Submission.findAll({ page });
+  res.render('admin/submissions', { submissions, page, totalPages, total, user: req.session.adminUser, csrfToken: res.locals.csrfToken });
 });
 
 router.post('/submissions/:id/read', requireAuth, csrfCheck, (req, res) => {
-  db.prepare('UPDATE submissions SET is_read = 1 WHERE id = ?').run(req.params.id);
+  Submission.markRead(req.params.id);
   res.redirect('/admin/submissions');
 });
 
 router.get('/submissions/export', requireAuth, (req, res) => {
-  // CSV escape to prevent injection (=, +, -, @, |)
-  const esc = (v) => {
-    const s = (v || '').toString().replace(/"/g, '""');
-    return /^[=+\-@|]/.test(s) ? `"'${s}"` : `"${s}"`;
-  };
-  const rows = db.prepare('SELECT * FROM submissions ORDER BY created_at DESC').all();
+  const esc = (v) => { const s = (v||'').toString().replace(/"/g,'""'); return /^[=+\-@|]/.test(s) ? `"'${s}"` : `"${s}"`; };
+  const rows = Submission.exportAll();
   let csv = 'ID,Ten,SDT,Email,Cap,Muc Tieu,Ngay\n';
-  rows.forEach(r => {
-    csv += `${r.id},${esc(r.parent_name)},${esc(r.phone)},${esc(r.email)},${esc(r.child_age)},${esc(r.goal)},${esc(r.created_at)}\n`;
-  });
+  rows.forEach(r => { csv += `${r.id},${esc(r.parent_name)},${esc(r.phone)},${esc(r.email)},${esc(r.child_age)},${esc(r.goal)},${esc(r.created_at)}\n`; });
   res.setHeader('Content-Type', 'text/csv; charset=utf-8');
   res.setHeader('Content-Disposition', 'attachment; filename=submissions.csv');
   res.send('\uFEFF' + csv);
@@ -272,14 +172,24 @@ router.get('/images', requireAuth, (req, res) => {
   const uploadDir = path.join(imgDir, 'uploads');
   const mainImages = fs.readdirSync(imgDir).filter(f => !fs.statSync(path.join(imgDir, f)).isDirectory());
   const uploadedImages = fs.existsSync(uploadDir) ? fs.readdirSync(uploadDir) : [];
-  res.render('admin/images', {
-    mainImages, uploadedImages, user: req.session.adminUser,
-    success: req.query.success === '1', csrfToken: res.locals.csrfToken
-  });
+  res.render('admin/images', { mainImages, uploadedImages, user: req.session.adminUser, success: req.query.success === '1', csrfToken: res.locals.csrfToken });
 });
 
 router.post('/images/upload', requireAuth, csrfCheck, upload.single('image'), (req, res) => {
   res.redirect('/admin/images?success=1');
+});
+
+// ===== SYSTEM STATUS =====
+router.get('/system', requireAuth, (req, res) => {
+  const dbPath = path.join(__dirname, '..', 'database', 'reading-pathway.db');
+  const dbSize = fs.existsSync(dbPath) ? (fs.statSync(dbPath).size / 1024 / 1024).toFixed(2) : '0';
+  const mem = process.memoryUsage();
+  res.json({
+    uptime: Math.floor(process.uptime()),
+    memory: { rss: (mem.rss / 1024 / 1024).toFixed(1) + 'MB', heap: (mem.heapUsed / 1024 / 1024).toFixed(1) + 'MB' },
+    database: { sizeMB: dbSize, submissions: Submission.countTotal(), blogPosts: BlogPost.findAll().length },
+    node: process.version
+  });
 });
 
 module.exports = router;

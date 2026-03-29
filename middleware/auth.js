@@ -1,13 +1,11 @@
-const db = require('../database/db');
+const User = require('../models/User');
 
 module.exports = function requireAuth(req, res, next) {
   if (!req.session || !req.session.adminId) {
     return res.redirect('/admin/login');
   }
 
-  // Verify user still exists in database
-  const user = db.prepare('SELECT id FROM admin_users WHERE id = ?').get(req.session.adminId);
-  if (!user) {
+  if (!User.existsById(req.session.adminId)) {
     req.session.destroy();
     return res.redirect('/admin/login');
   }
