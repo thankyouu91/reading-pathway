@@ -673,33 +673,37 @@
                 <form id="contactForm">
                     <input type="hidden" name="lang" value="<%= lang %>">
                     <div class="form-group">
-                        <label for="parentName"><%= g('contact','label_name') %></label>
-                        <input type="text" id="parentName" name="parentName" placeholder="<%= g('contact','placeholder_name') %>" required>
+                        <label for="parentName">Tên Trường/ Trung Tâm</label>
+                        <input type="text" id="parentName" name="parentName" placeholder="Nhập tên trường hoặc trung tâm" required>
                     </div>
                     <div class="form-group">
-                        <label for="phone"><%= g('contact','label_phone') %></label>
-                        <input type="tel" id="phone" name="phone" placeholder="<%= g('contact','placeholder_phone') %>" required>
+                        <label for="phone">Số Điện Thoại</label>
+                        <input type="tel" id="phone" name="phone" placeholder="0xxx xxx xxx" required>
                     </div>
                     <div class="form-group">
-                        <label for="email"><%= g('contact','label_email') %></label>
+                        <label for="email">Email</label>
                         <input type="email" id="email" name="email" placeholder="email@example.com" required>
                     </div>
                     <div class="form-group">
-                        <label for="childAge"><%= g('contact','label_age') %></label>
+                        <label for="childAge">Cấp</label>
                         <select id="childAge" name="childAge" required>
-                            <option value=""><%= lang === 'en' ? 'Select age' : lang === 'lo' ? 'ເລືອກອາຍຸ' : lang === 'km' ? 'ជ្រើសអាយុ' : 'Chọn độ tuổi' %></option>
-                            <% for (let i = 1; i <= 5; i++) { %>
-                            <option value="<%= i %>"><%= g('contact','age_option_'+i) %></option>
-                            <% } %>
+                            <option value="">Chọn cấp</option>
+                            <option value="cap1">Cấp 1</option>
+                            <option value="cap2">Cấp 2</option>
+                            <option value="cap3">Cấp 3</option>
+                            <option value="liencap">Liên Cấp</option>
+                            <option value="daihoc">Đại Học</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="goal"><%= g('contact','label_goal') %></label>
+                        <label for="goal">Mục Tiêu</label>
                         <select id="goal" name="goal">
-                            <option value=""><%= lang === 'en' ? 'Select goal' : lang === 'lo' ? 'ເລືອກເປົ້າໝາຍ' : lang === 'km' ? 'ជ្រើសគោលដៅ' : 'Chọn mục tiêu' %></option>
-                            <% for (let i = 1; i <= 5; i++) { %>
-                            <option value="<%= i %>"><%= g('contact','goal_option_'+i) %></option>
-                            <% } %>
+                            <option value="">Chọn mục tiêu</option>
+                            <option value="reading">Rèn Đọc Hiểu</option>
+                            <option value="preielts">Pre-IELTS</option>
+                            <option value="ielts">IELTS</option>
+                            <option value="academic">Học Thuật</option>
+                            <option value="all">Tất Cả</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block"><%= g('contact','form_button') %></button>
