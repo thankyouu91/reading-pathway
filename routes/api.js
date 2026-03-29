@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require('../database/db');
 const Submission = require('../models/Submission');
 const Content = require('../models/Content');
+const EmailService = require('../models/EmailService');
 const { body, validationResult } = require('express-validator');
 const rateLimit = require('express-rate-limit');
 
@@ -36,6 +37,9 @@ router.post('/contact', formLimiter, contactRules, (req, res) => {
 
   try {
     Submission.create(req.body);
+    // Send email notifications (async, don't block response)
+    EmailService.notifyNewSubmission(req.body).catch(() => {});
+    EmailService.sendConfirmation(req.body).catch(() => {});
     res.json({ success: true, message: 'Dang ky thanh cong!' });
   } catch (err) {
     console.error(`[${new Date().toISOString()}] Submission error:`, err.message);
