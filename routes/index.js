@@ -4,7 +4,7 @@ const db = require('../database/db');
 const createDOMPurify = require('isomorphic-dompurify');
 const DOMPurify = createDOMPurify;
 
-const SITE_URL = process.env.SITE_URL || 'https://readingpathway.up.railway.app';
+const SITE_URL = process.env.SITE_URL || 'https://reading-pathway-production.up.railway.app';
 
 router.get('/', (req, res) => {
   const lang = 'vi';
