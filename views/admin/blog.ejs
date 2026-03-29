@@ -1,0 +1,29 @@
+<%- include('layout', { body: `
+<div class="edit-header">
+    <h1>Quan Ly Blog (${posts.length} bai)</h1>
+    <a href="/admin/blog/new" class="btn-admin-primary">+ Bai Viet Moi</a>
+</div>
+
+<table class="admin-table">
+    <thead><tr><th>Tieu De</th><th>Slug</th><th>Trang Thai</th><th>Ngay</th><th>Hanh Dong</th></tr></thead>
+    <tbody>
+        ${posts.length === 0 ? '<tr><td colspan="5" style="text-align:center;padding:40px;color:#94A3B8">Chua co bai viet</td></tr>' : ''}
+        ${posts.map(p => `
+        <tr>
+            <td><strong>${p.title}</strong></td>
+            <td><code>/blog/${p.slug}</code></td>
+            <td>${p.is_published ? '<span class="badge badge-read">Published</span>' : '<span class="badge badge-unread">Draft</span>'}</td>
+            <td>${new Date(p.created_at).toLocaleDateString('vi-VN')}</td>
+            <td style="display:flex;gap:8px">
+                <a href="/admin/blog/edit/${p.id}" class="btn-admin-outline" style="padding:6px 12px;font-size:0.8rem">Sua</a>
+                ${p.is_published ? '<a href="/blog/' + p.slug + '" target="_blank" class="btn-admin-outline" style="padding:6px 12px;font-size:0.8rem">Xem</a>' : ''}
+                <form method="POST" action="/admin/blog/delete/${p.id}" style="display:inline" onsubmit="return confirm('Xoa bai viet nay?')">
+                    <input type="hidden" name="_csrf" value="${csrfToken}">
+                    <button type="submit" class="btn-admin-outline" style="padding:6px 12px;font-size:0.8rem;color:#EF4444;border-color:#EF4444">Xoa</button>
+                </form>
+            </td>
+        </tr>
+        `).join('')}
+    </tbody>
+</table>
+` }) %>

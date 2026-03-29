@@ -1,0 +1,58 @@
+<%- include('layout', { body: `
+<div class="edit-header">
+    <a href="/admin/blog" class="back-link">&larr; Quay Lai</a>
+    <h1>${post ? 'Sua Bai Viet' : 'Bai Viet Moi'}</h1>
+</div>
+
+<form method="POST" action="/admin/blog/save" class="edit-form">
+    <input type="hidden" name="_csrf" value="${csrfToken}">
+    ${post ? '<input type="hidden" name="id" value="' + post.id + '">' : ''}
+
+    <div class="field-group">
+        <label class="field-label"><span class="field-key">title</span><span class="field-type">text</span></label>
+        <input type="text" name="title" value="${post ? post.title.replace(/"/g, '&quot;') : ''}" class="field-input" placeholder="Tieu de bai viet" required>
+    </div>
+
+    <div class="field-group">
+        <label class="field-label"><span class="field-key">slug</span><span class="field-type">url</span></label>
+        <input type="text" name="slug" value="${post ? post.slug : ''}" class="field-input" placeholder="tu-dong-tao-tu-tieu-de">
+    </div>
+
+    <div class="field-group">
+        <label class="field-label"><span class="field-key">excerpt</span><span class="field-type">text</span></label>
+        <textarea name="excerpt" class="field-textarea" rows="2" placeholder="Mo ta ngan (hien thi tren trang blog)">${post ? post.excerpt : ''}</textarea>
+    </div>
+
+    <div class="field-group">
+        <label class="field-label"><span class="field-key">content</span><span class="field-type">html</span></label>
+        <textarea name="content" class="field-textarea" rows="20" placeholder="Noi dung bai viet (ho tro HTML: h2, h3, p, ul, li, blockquote, img, a, strong, em)">${post ? post.content : ''}</textarea>
+    </div>
+
+    <div class="field-group">
+        <label class="field-label"><span class="field-key">cover_image</span><span class="field-type">image url</span></label>
+        <input type="text" name="cover_image" value="${post ? (post.cover_image || '') : ''}" class="field-input" placeholder="/images/uploads/anh-bia.jpg hoac URL">
+    </div>
+
+    <div class="field-group">
+        <label class="field-label"><span class="field-key">meta_description</span><span class="field-type">SEO</span></label>
+        <input type="text" name="meta_description" value="${post ? (post.meta_description || '') : ''}" class="field-input" placeholder="Mo ta SEO (160 ky tu)">
+    </div>
+
+    <div class="field-group">
+        <label class="field-label"><span class="field-key">meta_keywords</span><span class="field-type">SEO</span></label>
+        <input type="text" name="meta_keywords" value="${post ? (post.meta_keywords || '') : ''}" class="field-input" placeholder="tu khoa 1, tu khoa 2, tu khoa 3">
+    </div>
+
+    <div class="field-group">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+            <input type="checkbox" name="is_published" value="1" ${post && post.is_published ? 'checked' : ''}>
+            <strong>Xuat ban (Published)</strong>
+        </label>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn-admin-primary">Luu Bai Viet</button>
+        ${post && post.is_published ? '<a href="/blog/' + post.slug + '" target="_blank" class="btn-admin-outline">Xem Trang</a>' : ''}
+    </div>
+</form>
+` }) %>

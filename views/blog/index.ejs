@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog | Reading Pathway - Kiến Thức Đọc Hiểu & IELTS</title>
+    <meta name="description" content="Bài viết về đọc hiểu tiếng Anh, Pre-IELTS, phương pháp giáo dục, Đề án 2371/QĐ-TTg và giải pháp cho trường học.">
+    <link rel="canonical" href="<%= siteUrl %>/blog">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/premium.css">
+    <link rel="stylesheet" href="/blog.css">
+</head>
+<body>
+    <nav class="blog-nav">
+        <div class="container blog-nav-inner">
+            <a href="/" class="logo"><span>📖</span> Reading <strong>Pathway</strong></a>
+            <div class="blog-nav-links">
+                <a href="/">Trang Chủ</a>
+                <a href="/blog" class="active">Blog</a>
+                <a href="/#contact">Liên Hệ</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="blog-header">
+        <div class="container">
+            <h1>Blog & Kiến Thức</h1>
+            <p>Chia sẻ về đọc hiểu, phương pháp giáo dục tiếng Anh, IELTS và giải pháp cho trường học</p>
+        </div>
+    </header>
+
+    <main class="blog-main">
+        <div class="container">
+            <% if (posts.length === 0) { %>
+            <div class="blog-empty">
+                <p>Chưa có bài viết nào. Hãy quay lại sau!</p>
+                <a href="/" class="btn btn-primary">Về Trang Chủ</a>
+            </div>
+            <% } else { %>
+            <div class="blog-grid">
+                <% posts.forEach(post => { %>
+                <article class="blog-card">
+                    <% if (post.cover_image) { %>
+                    <div class="blog-card-img">
+                        <img src="<%= post.cover_image %>" alt="<%= post.title %>" loading="lazy">
+                    </div>
+                    <% } %>
+                    <div class="blog-card-body">
+                        <time><%= new Date(post.created_at).toLocaleDateString('vi-VN') %></time>
+                        <h2><a href="/blog/<%= post.slug %>"><%= post.title %></a></h2>
+                        <p><%= post.excerpt %></p>
+                        <a href="/blog/<%= post.slug %>" class="blog-read-more">Đọc tiếp →</a>
+                    </div>
+                </article>
+                <% }); %>
+            </div>
+
+            <% if (totalPages > 1) { %>
+            <div class="blog-pagination">
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                <a href="/blog?page=<%= i %>" class="<%= i === page ? 'active' : '' %>"><%= i %></a>
+                <% } %>
+            </div>
+            <% } %>
+            <% } %>
+        </div>
+    </main>
+
+    <footer class="blog-footer">
+        <div class="container">
+            <p>&copy; 2026 Reading Pathway. Powered By Cdimex Edu Solutions</p>
+        </div>
+    </footer>
+</body>
+</html>

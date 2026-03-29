@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= post.title %> | Reading Pathway Blog</title>
+    <meta name="description" content="<%= post.meta_description || post.excerpt %>">
+    <meta name="keywords" content="<%= post.meta_keywords || 'đọc hiểu, tiếng Anh, Trophy9, Achieve3000' %>">
+    <link rel="canonical" href="<%= siteUrl %>/blog/<%= post.slug %>">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="<%= post.title %>">
+    <meta property="og:description" content="<%= post.meta_description || post.excerpt %>">
+    <meta property="og:url" content="<%= siteUrl %>/blog/<%= post.slug %>">
+    <% if (post.cover_image) { %><meta property="og:image" content="<%= post.cover_image %>"><% } %>
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"BlogPosting","headline":"<%= post.title %>","description":"<%= post.meta_description || post.excerpt %>","datePublished":"<%= post.created_at %>","dateModified":"<%= post.updated_at %>","author":{"@type":"Organization","name":"Cdimex Education Solutions"},"publisher":{"@type":"Organization","name":"Reading Pathway"}}
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/premium.css">
+    <link rel="stylesheet" href="/blog.css">
+</head>
+<body>
+    <nav class="blog-nav">
+        <div class="container blog-nav-inner">
+            <a href="/" class="logo"><span>📖</span> Reading <strong>Pathway</strong></a>
+            <div class="blog-nav-links">
+                <a href="/">Trang Chủ</a>
+                <a href="/blog" class="active">Blog</a>
+                <a href="/#contact">Liên Hệ</a>
+            </div>
+        </div>
+    </nav>
+
+    <article class="blog-article">
+        <div class="container blog-container">
+            <header class="article-header">
+                <a href="/blog" class="back-link">← Quay lại Blog</a>
+                <h1><%= post.title %></h1>
+                <time><%= new Date(post.created_at).toLocaleDateString('vi-VN', {year:'numeric',month:'long',day:'numeric'}) %></time>
+            </header>
+
+            <% if (post.cover_image) { %>
+            <div class="article-cover">
+                <img src="<%= post.cover_image %>" alt="<%= post.title %>">
+            </div>
+            <% } %>
+
+            <div class="article-content">
+                <%- post.content %>
+            </div>
+
+            <!-- CTA -->
+            <div class="article-cta">
+                <h3>Quan tâm đến giải pháp đọc hiểu cho trường học?</h3>
+                <p>Liên hệ Cdimex Education để nhận tư vấn và demo miễn phí</p>
+                <a href="/#contact" class="btn btn-primary">Đăng Ký Tư Vấn</a>
+            </div>
+
+            <% if (related.length > 0) { %>
+            <div class="related-posts">
+                <h3>Bài Viết Liên Quan</h3>
+                <div class="related-grid">
+                    <% related.forEach(r => { %>
+                    <a href="/blog/<%= r.slug %>" class="related-card">
+                        <h4><%= r.title %></h4>
+                        <p><%= r.excerpt.substring(0, 100) %>...</p>
+                    </a>
+                    <% }); %>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </article>
+
+    <footer class="blog-footer">
+        <div class="container">
+            <p>&copy; 2026 Reading Pathway. Powered By Cdimex Edu Solutions</p>
+        </div>
+    </footer>
+</body>
+</html>

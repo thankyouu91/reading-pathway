@@ -180,6 +180,41 @@ router.post('/sections/:section', requireAuth, csrfCheck, (req, res) => {
   res.redirect(`/admin/sections/${section}?lang=${lang}&success=1`);
 });
 
+// ===== BLOG =====
+router.get('/blog', requireAuth, (req, res) => {
+  const posts = db.prepare('SELECT * FROM blog_posts ORDER BY created_at DESC').all();
+  res.render('admin/blog', { posts, user: req.session.adminUser, csrfToken: res.locals.csrfToken });
+});
+
+router.get('/blog/new', requireAuth, (req, res) => {
+  res.render('admin/blog-edit', { post: null, user: req.session.adminUser, csrfToken: res.locals.csrfToken });
+});
+
+router.get('/blog/edit/:id', requireAuth, (req, res) => {
+  const post = db.prepare('SELECT * FROM blog_posts WHERE id = ?').get(req.params.id);
+  if (!post) return res.redirect('/admin/blog');
+  res.render('admin/blog-edit', { post, user: req.session.adminUser, csrfToken: res.locals.csrfToken });
+});
+
+router.post('/blog/save', requireAuth, csrfCheck, (req, res) => {
+  const { id, title, slug, excerpt, content, cover_image, meta_description, meta_keywords, is_published } = req.body;
+  const cleanSlug = (slug || title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+  if (id) {
+    db.prepare('UPDATE blog_posts SET title=?, slug=?, excerpt=?, content=?, cover_image=?, meta_description=?, meta_keywords=?, is_published=?, updated_at=CURRENT_TIMESTAMP WHERE id=?')
+      .run(title, cleanSlug, excerpt, content, cover_image || '', meta_description || '', meta_keywords || '', is_published ? 1 : 0, id);
+  } else {
+    db.prepare('INSERT INTO blog_posts (title, slug, excerpt, content, cover_image, meta_description, meta_keywords, is_published) VALUES (?,?,?,?,?,?,?,?)')
+      .run(title, cleanSlug, excerpt, content, cover_image || '', meta_description || '', meta_keywords || '', is_published ? 1 : 0);
+  }
+  res.redirect('/admin/blog');
+});
+
+router.post('/blog/delete/:id', requireAuth, csrfCheck, (req, res) => {
+  db.prepare('DELETE FROM blog_posts WHERE id = ?').run(req.params.id);
+  res.redirect('/admin/blog');
+});
+
 // ===== SUBMISSIONS =====
 router.get('/submissions', requireAuth, (req, res) => {
   const page = parseInt(req.query.page) || 1;
