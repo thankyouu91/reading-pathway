@@ -73,8 +73,8 @@ const allContent = {
     footer: {
       description: 'Con đường đọc hiểu toàn diện từ Mầm Non đến Đại Học. Xây dựng nền tảng ngôn ngữ vững chắc cho tương lai.',
       col2_title: 'Chương Trình', col3_title: 'Hỗ Trợ', col4_title: 'Liên Hệ',
-      contact_zalo: '(+84) 345-037-595', contact_email: 'trophy9@trophy9.com',
-      contact_website: 'www.trophy9.com', contact_address: 'TP. Hồ Chí Minh, Việt Nam',
+      contact_zalo: '+84 93 736 03391', contact_email: 'Tranlong@cdimex.com.vn',
+      contact_website: 'www.Cdimex.com.vn', contact_address: 'TP. Hồ Chí Minh, Việt Nam',
       copyright: '2026 Reading Pathway. Powered By Cdimex Edu Solutions'
     },
     nav: { cta_button: 'Đăng Ký Ngay' },
@@ -146,8 +146,8 @@ const allContent = {
     footer: {
       description: 'A comprehensive reading pathway from Kindergarten to University. Building a strong language foundation for the future.',
       col2_title: 'Programs', col3_title: 'Support', col4_title: 'Contact',
-      contact_zalo: '(+84) 345-037-595', contact_email: 'trophy9@trophy9.com',
-      contact_website: 'www.trophy9.com', contact_address: 'Ho Chi Minh City, Vietnam',
+      contact_zalo: '+84 93 736 03391', contact_email: 'Tranlong@cdimex.com.vn',
+      contact_website: 'www.Cdimex.com.vn', contact_address: 'Ho Chi Minh City, Vietnam',
       copyright: '2026 Reading Pathway. Powered By Cdimex Edu Solutions'
     },
     nav: { cta_button: 'Register Now' },
@@ -219,8 +219,8 @@ const allContent = {
     footer: {
       description: 'ເສັ້ນທາງການອ່ານຄົບຖ້ວນ ຈາກອະນຸບານຫາມະຫາວິທະຍາໄລ.',
       col2_title: 'ໂປຣແກຣມ', col3_title: 'ຊ່ວຍເຫຼືອ', col4_title: 'ຕິດຕໍ່',
-      contact_zalo: '(+84) 345-037-595', contact_email: 'trophy9@trophy9.com',
-      contact_website: 'www.trophy9.com', contact_address: 'ນະຄອນໂຮ່ຈີມິນ, ຫວຽດນາມ',
+      contact_zalo: '+84 93 736 03391', contact_email: 'Tranlong@cdimex.com.vn',
+      contact_website: 'www.Cdimex.com.vn', contact_address: 'ນະຄອນໂຮ່ຈີມິນ, ຫວຽດນາມ',
       copyright: '2026 Reading Pathway. Powered By Cdimex Edu Solutions'
     },
     nav: { cta_button: 'ລົງທະບຽນ' },
@@ -292,8 +292,8 @@ const allContent = {
     footer: {
       description: 'ផ្លូវអានយល់ពេញលេញ ពីមត្តេយ្យដល់មហាវិទ្យាល័យ។',
       col2_title: 'កម្មវិធី', col3_title: 'ជំនួយ', col4_title: 'ទំនាក់ទំនង',
-      contact_zalo: '(+84) 345-037-595', contact_email: 'trophy9@trophy9.com',
-      contact_website: 'www.trophy9.com', contact_address: 'ទីក្រុងហូជីមិញ, វៀតណាម',
+      contact_zalo: '+84 93 736 03391', contact_email: 'Tranlong@cdimex.com.vn',
+      contact_website: 'www.Cdimex.com.vn', contact_address: 'ទីក្រុងហូជីមិញ, វៀតណាម',
       copyright: '2026 Reading Pathway. Powered By Cdimex Edu Solutions'
     },
     nav: { cta_button: 'ចុះឈ្មោះ' },
