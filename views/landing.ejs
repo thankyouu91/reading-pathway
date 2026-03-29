@@ -351,6 +351,17 @@
 
 <!-- Learning Pathway -->
 <section class="section section-gray" id="pathway">
+    <!-- Floating background decorations -->
+    <div class="pathway-decorations">
+        <div class="deco deco-book-1">📚</div>
+        <div class="deco deco-star-1">⭐</div>
+        <div class="deco deco-pencil">✏️</div>
+        <div class="deco deco-globe">🌍</div>
+        <div class="deco deco-star-2">💡</div>
+        <div class="deco deco-hat">🎓</div>
+        <div class="deco deco-abc">🔤</div>
+        <div class="deco deco-rocket">🚀</div>
+    </div>
     <div class="container">
         <div class="section-header">
             <span class="section-tag"><%= g('pathway','tag') %></span>
@@ -358,10 +369,15 @@
             <p><%= g('pathway','description') %></p>
         </div>
         <div class="pathway-timeline">
+            <% const stageIllustrations = [
+                '👧🏻', // Mầm non - bé gái nhỏ
+                '👦🏻', // Tiểu học - bé trai
+                '🧑🏻'  // THCS - thiếu niên
+            ]; %>
             <% const stages = [
-                { n: 1, icon: '🌱', css: 'kindergarten', dotCss: '', lineCss: '' },
-                { n: 2, icon: '📖', css: 'primary', dotCss: '', lineCss: '' },
-                { n: 3, icon: '🎯', css: 'secondary', dotCss: '', lineCss: '' }
+                { n: 1, icon: '🌱', css: 'kindergarten', dotCss: '', lineCss: '', illus: stageIllustrations[0] },
+                { n: 2, icon: '📖', css: 'primary', dotCss: '', lineCss: '', illus: stageIllustrations[1] },
+                { n: 3, icon: '🎯', css: 'secondary', dotCss: '', lineCss: '', illus: stageIllustrations[2] }
             ]; %>
             <% stages.forEach(s => { %>
             <div class="pathway-stage" data-stage="<%= s.n %>">
@@ -371,6 +387,7 @@
                 </div>
                 <div class="stage-content">
                     <div class="stage-card <%= s.css %>">
+                        <div class="stage-illustration"><%= s.illus %></div>
                         <div class="stage-header">
                             <span class="stage-icon"><%= s.icon %></span>
                             <div>
@@ -409,9 +426,10 @@
                 </div>
             </div>
 
+            <% const achieveIllus = ['🧑🏻‍💻', '👩🏻‍🎓']; %>
             <% const stagesAchieve = [
-                { n: 4, icon: '🏆', css: 'highschool' },
-                { n: 5, icon: '🎓', css: 'university' }
+                { n: 4, icon: '🏆', css: 'highschool', illus: achieveIllus[0] },
+                { n: 5, icon: '🎓', css: 'university', illus: achieveIllus[1] }
             ]; %>
             <% stagesAchieve.forEach((s, idx) => { %>
             <div class="pathway-stage" data-stage="<%= s.n %>">
@@ -421,6 +439,7 @@
                 </div>
                 <div class="stage-content">
                     <div class="stage-card <%= s.css %>">
+                        <div class="stage-illustration"><%= s.illus %></div>
                         <div class="stage-header">
                             <span class="stage-icon"><%= s.icon %></span>
                             <div>

@@ -365,6 +365,24 @@ window.addEventListener('scroll', () => {
     }
 }, { passive: true });
 
+// ===== PARALLAX FOR PATHWAY DECORATIONS =====
+const decoElements = document.querySelectorAll('.deco');
+if (decoElements.length > 0) {
+    const pathwaySection = document.getElementById('pathway');
+    window.addEventListener('scroll', () => {
+        if (!pathwaySection) return;
+        const rect = pathwaySection.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+            const scrollInSection = window.innerHeight - rect.top;
+            decoElements.forEach((el, i) => {
+                const speed = (i % 4 + 1) * 0.02;
+                const direction = i % 2 === 0 ? 1 : -1;
+                el.style.transform = `translateY(${scrollInSection * speed * direction}px) rotate(${scrollInSection * 0.01 * direction}deg)`;
+            });
+        }
+    }, { passive: true });
+}
+
 // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
