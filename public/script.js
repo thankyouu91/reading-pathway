@@ -413,7 +413,7 @@ if (contactForm) {
                 const overlay = document.createElement('div');
                 overlay.className = 'form-success-overlay';
                 overlay.innerHTML = `
-                    <dotlottie-player src="https://lottie.host/0e2b4100-20c0-4d64-8a3e-82f0b44ab8e6/FrMTWdPIqo.json" background="transparent" speed="1" style="width:120px;height:120px" autoplay></dotlottie-player>
+                    <div class="success-checkmark"><svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="none" stroke="#10B981" stroke-width="3" class="circle-anim"/><path d="M24 42l10 10 22-24" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="check-anim"/></svg></div>
                     <p class="form-success-text">Đăng ký thành công!</p>
                 `;
                 formEl.style.position = 'relative';

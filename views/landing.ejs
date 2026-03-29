@@ -156,7 +156,11 @@
 <body>
 <!-- Loading Screen -->
 <div class="loading-screen" id="loadingScreen">
-    <dotlottie-player src="https://lottie.host/4db68bbd-31f6-4cd8-84eb-189572c9015d/AgwVuKgHSr.json" background="transparent" speed="1" style="width:120px;height:120px" loop autoplay></dotlottie-player>
+    <div class="loading-book">
+        <div class="book-page page-left"></div>
+        <div class="book-page page-right"></div>
+        <div class="book-spine"></div>
+    </div>
     <p class="loading-text">Reading Pathway</p>
 </div>
 
@@ -216,9 +220,6 @@
             </div>
         </div>
         <div class="hero-visual">
-            <div class="hero-lottie">
-                <dotlottie-player src="https://lottie.host/f7d3a1c4-5b2e-4f8a-9c6d-8e3b7a2f1d5c/reading-hero.json" background="transparent" speed="1" style="width:100%;max-width:480px" loop autoplay></dotlottie-player>
-            </div>
             <div class="hero-card-stack">
                 <% for (let i = 1; i <= 4; i++) { const icons = ['🌱','📖','🎯','🎓']; %>
                 <div class="floating-card card-<%= i %>">
