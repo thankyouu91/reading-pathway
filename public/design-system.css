@@ -338,15 +338,22 @@
     font-weight: 500;
 }
 
-/* Stats redesign */
+/* Stats redesign - 5 items */
+.hero-stats {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
 .hero-stats .stat {
     background: white;
-    padding: var(--space-4) var(--space-5);
+    padding: var(--space-3) var(--space-4);
     border-radius: var(--radius-card);
     box-shadow: var(--shadow-card);
     border: 1px solid var(--border-default, #E2E8F0);
     text-align: center;
-    min-width: 100px;
+    min-width: 80px;
+    flex: 1;
 }
 
 .stat-number {
