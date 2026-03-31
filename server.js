@@ -158,6 +158,7 @@ app.use(express.static(path.join(__dirname, 'public'), {
 app.use('/', require('./routes/index'));
 app.use('/api', require('./routes/api'));
 app.use('/blog', require('./routes/blog'));
+app.use('/ho-tro', require('./routes/support'));
 app.use('/admin', require('./routes/admin'));
 
 // 404

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %> | Reading Pathway</title>
+    <meta name="description" content="<%= pageDesc %>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/premium.css">
+    <link rel="stylesheet" href="/blog.css">
+    <link rel="stylesheet" href="/support.css">
+</head>
+<body>
+    <nav class="blog-nav">
+        <div class="container blog-nav-inner">
+            <a href="/" class="logo"><span>📖</span> Reading <strong>Pathway</strong></a>
+            <div class="blog-nav-links">
+                <a href="/">Trang Chủ</a>
+                <a href="/blog">Blog</a>
+                <a href="/#contact">Liên Hệ</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="blog-header">
+        <div class="container">
+            <h1><%= pageTitle %></h1>
+            <p><%= pageDesc %></p>
+        </div>
+    </header>
+
+    <main class="support-main">
+        <div class="container support-container">
+            <aside class="support-sidebar">
+                <nav class="support-nav">
+                    <a href="/ho-tro/faq" class="<%= page === 'faq' ? 'active' : '' %>">
+                        <span>❓</span> FAQ
+                    </a>
+                    <a href="/ho-tro/huong-dan" class="<%= page === 'guide' ? 'active' : '' %>">
+                        <span>📘</span> Hướng Dẫn
+                    </a>
+                    <a href="/ho-tro/chinh-sach-bao-mat" class="<%= page === 'privacy' ? 'active' : '' %>">
+                        <span>🔒</span> Bảo Mật
+                    </a>
+                    <a href="/ho-tro/dieu-khoan" class="<%= page === 'terms' ? 'active' : '' %>">
+                        <span>📄</span> Điều Khoản
+                    </a>
+                </nav>
+                <div class="support-contact-box">
+                    <h4>Cần hỗ trợ thêm?</h4>
+                    <p>Đội ngũ của chúng tôi sẵn sàng giải đáp mọi thắc mắc.</p>
+                    <a href="/#contact" class="support-cta-btn">Liên Hệ Ngay</a>
+                </div>
+            </aside>
+
+            <article class="support-content">

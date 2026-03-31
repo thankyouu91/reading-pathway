@@ -1,0 +1,90 @@
+<%- include('_header') %>
+
+<h2>Câu Hỏi Thường Gặp</h2>
+
+<div class="faq-list">
+
+  <div class="faq-item">
+    <button class="faq-question" onclick="toggleFaq(this)">
+      Reading Pathway là gì? <span class="faq-icon">+</span>
+    </button>
+    <div class="faq-answer">
+      <p>Reading Pathway là nền tảng giáo dục kết hợp hai sản phẩm hàng đầu: <strong>Trophy9</strong> (dành cho học sinh Mầm Non – Lớp 9) và <strong>Achieve3000</strong> (dành cho học sinh THPT đến Đại Học). Chúng tôi cung cấp giải pháp đọc hiểu tiếng Anh toàn diện theo chuẩn CCSS và chỉ số Lexile của Hoa Kỳ.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question" onclick="toggleFaq(this)">
+      Trophy9 phù hợp với độ tuổi nào? <span class="faq-icon">+</span>
+    </button>
+    <div class="faq-answer">
+      <p><strong>Trophy9</strong> được thiết kế cho học sinh từ <strong>Mầm Non đến Lớp 9</strong> (K–9), tương ứng từ 4–15 tuổi. Chương trình chia thành 6 cấp độ (T1–T6) theo 3 giai đoạn: Walk, Run và Sprint, đảm bảo lộ trình học phù hợp với từng bé.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question" onclick="toggleFaq(this)">
+      Achieve3000 khác Trophy9 như thế nào? <span class="faq-icon">+</span>
+    </button>
+    <div class="faq-answer">
+      <p><strong>Achieve3000</strong> dành cho học sinh THPT và sinh viên Đại Học (Lớp 10 trở lên). Nền tảng này sử dụng công nghệ học tập thích ứng (adaptive learning) để cá nhân hóa nội dung đọc theo chỉ số Lexile, chuẩn bị cho IELTS, SAT và các kỳ thi học thuật quốc tế.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question" onclick="toggleFaq(this)">
+      Chỉ số Lexile là gì và tại sao quan trọng? <span class="faq-icon">+</span>
+    </button>
+    <div class="faq-answer">
+      <p>Chỉ số Lexile là thước đo trình độ đọc hiểu tiếng Anh được sử dụng tại hơn 100 quốc gia, do MetaMetrics Inc. (Hoa Kỳ) phát triển. Chỉ số này giúp xác định chính xác trình độ của học sinh và ghép đôi với nội dung đọc phù hợp — không quá dễ và không quá khó. Đây là nền tảng khoa học cốt lõi của cả Trophy9 và Achieve3000.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question" onclick="toggleFaq(this)">
+      Trường học đăng ký sử dụng như thế nào? <span class="faq-icon">+</span>
+    </button>
+    <div class="faq-answer">
+      <p>Trường học có thể liên hệ trực tiếp với đội ngũ Reading Pathway để được tư vấn và demo sản phẩm miễn phí. Chúng tôi hỗ trợ triển khai từ đầu đến cuối, bao gồm: cài đặt tài khoản, đào tạo giáo viên, thiết lập lộ trình học và cung cấp báo cáo tiến độ định kỳ. <a href="/#contact">Liên hệ ngay</a> để bắt đầu.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question" onclick="toggleFaq(this)">
+      Reading Pathway có hỗ trợ phụ huynh theo dõi không? <span class="faq-icon">+</span>
+    </button>
+    <div class="faq-answer">
+      <p>Có. Hệ thống cung cấp <strong>dashboard theo dõi tiến độ</strong> chi tiết cho cả giáo viên và phụ huynh: thời gian học, chỉ số Lexile hiện tại, tỷ lệ hoàn thành bài, điểm mạnh/yếu theo từng kỹ năng.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question" onclick="toggleFaq(this)">
+      Nội dung có được cập nhật thường xuyên không? <span class="faq-icon">+</span>
+    </button>
+    <div class="faq-answer">
+      <p>Với Achieve3000, nội dung bài đọc được cập nhật <strong>hàng tuần</strong> từ các nguồn tin tức và học thuật uy tín quốc tế. Trophy9 cung cấp thư viện 198 Leveled Readers và 54 Workbooks theo chuẩn Benchmark Education.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question" onclick="toggleFaq(this)">
+      Chương trình có phù hợp với Đề án 2371/QĐ-TTg không? <span class="faq-icon">+</span>
+    </button>
+    <div class="faq-answer">
+      <p>Hoàn toàn phù hợp. Reading Pathway được xây dựng theo chuẩn CCSS và chỉ số Lexile quốc tế, đáp ứng trực tiếp mục tiêu của <a href="/blog/de-an-2371-tieng-anh-ngon-ngu-thu-hai">Đề án 2371/QĐ-TTg</a> về nâng cao năng lực tiếng Anh cho học sinh Việt Nam giai đoạn 2025–2035.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+</script>
+
+<%- include('_footer') %>
