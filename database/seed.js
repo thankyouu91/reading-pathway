@@ -331,7 +331,17 @@ const langs = db.prepare('SELECT DISTINCT lang FROM content').all().map(r => r.l
 console.log(`Seed done! ${count} rows | Languages: ${langs.join(', ')}`);
 
 // ===== BLOG POSTS =====
-const insertPost = db.prepare('INSERT OR IGNORE INTO blog_posts (slug, title, excerpt, content, meta_description, meta_keywords, is_published) VALUES (?,?,?,?,?,?,1)');
+const insertPost = db.prepare('INSERT OR IGNORE INTO blog_posts (slug, title, excerpt, content, cover_image, meta_description, meta_keywords, is_published) VALUES (?,?,?,?,?,?,?,1)');
+const updateCover = db.prepare("UPDATE blog_posts SET cover_image=? WHERE slug=? AND (cover_image IS NULL OR cover_image='')");
+
+const postCovers = {
+  'de-an-2371-tieng-anh-ngon-ngu-thu-hai':                 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=800&q=80',
+  'lexile-la-gi-do-trinh-do-doc-hieu':                     'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&q=80',
+  'trophy9-9-hoat-dong-hoc-tieng-anh':                     'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80',
+  'chien-luoc-doc-hieu-ielts-tang-band-diem':              'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&q=80',
+  'achieve3000-nen-tang-doc-hieu-hoc-sinh-thpt':           'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80',
+  'blended-learning-phuong-phap-day-tieng-anh-hien-dai':  'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80',
+};
 
 const blogPosts = [
   {
@@ -387,8 +397,10 @@ const blogPosts = [
 const seedBlogPosts = db.transaction(() => {
   let created = 0;
   for (const post of blogPosts) {
-    const result = insertPost.run(post.slug, post.title, post.excerpt, post.content, post.meta_description, post.meta_keywords);
+    const cover = postCovers[post.slug] || '';
+    const result = insertPost.run(post.slug, post.title, post.excerpt, post.content, cover, post.meta_description, post.meta_keywords);
     if (result.changes > 0) created++;
+    else updateCover.run(cover, post.slug); // backfill cover for existing rows
   }
   return created;
 });
