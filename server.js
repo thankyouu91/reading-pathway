@@ -30,22 +30,39 @@ if (blogCount === 0) {
   require('./database/seed');
 }
 
-// Auto-migration: add contact addresses HCM & HN if missing
-const addrHcm = db.prepare("SELECT id FROM content WHERE lang='vi' AND section='footer' AND content_key='contact_address_hcm'").get();
-if (!addrHcm) {
-  const insAddr = db.prepare("INSERT OR IGNORE INTO content (lang, section, content_key, content_value, content_type, sort_order) VALUES (?,?,?,?,?,?)");
-  [
-    ['vi','footer','contact_address_hcm','72 Trường Sơn, P.2, Tân Bình, TP. HCM','text',200],
-    ['vi','footer','contact_address_hn','14 Phan Chu Trinh, Hoàn Kiếm, Hà Nội','text',201],
-    ['en','footer','contact_address_hcm','72 Truong Son, Ward 2, Tan Binh, Ho Chi Minh City','text',200],
-    ['en','footer','contact_address_hn','14 Phan Chu Trinh, Hoan Kiem, Hanoi','text',201],
-    ['lo','footer','contact_address_hcm','72 Truong Son, Ward 2, Tan Binh, Ho Chi Minh City','text',200],
-    ['lo','footer','contact_address_hn','14 Phan Chu Trinh, Hoan Kiem, Hanoi','text',201],
-    ['km','footer','contact_address_hcm','72 Truong Son, Ward 2, Tan Binh, Ho Chi Minh City','text',200],
-    ['km','footer','contact_address_hn','14 Phan Chu Trinh, Hoan Kiem, Hanoi','text',201],
-  ].forEach(r => insAddr.run(...r));
-  console.log('Migration: added contact addresses HCM & HN');
-}
+// Auto-migration: upsert full Cdimex contact info
+const upsertContact = db.prepare("INSERT OR REPLACE INTO content (lang, section, content_key, content_value, content_type, sort_order) VALUES (?,?,?,?,?,?)");
+[
+  ['vi','footer','contact_company','CÔNG TY CỔ PHẦN XUẤT NHẬP KHẨU VÀ PHÁT TRIỂN VĂN HÓA','text',195],
+  ['vi','footer','contact_address_hcm','99A Nguyễn Văn Trỗi, Phường Phú Nhuận, TP. Hồ Chí Minh','text',200],
+  ['vi','footer','contact_address_hn','94 Nguyễn Hy Quang, Phường Đống Đa, Hà Nội','text',201],
+  ['vi','footer','contact_phone','(+84 28) 399 70 829','text',202],
+  ['vi','footer','contact_email','info@cdimex.com.vn','text',203],
+  ['vi','footer','contact_website','www.bookmedi.vn','text',204],
+  ['vi','footer','contact_hours','Thứ 2 - Thứ 6: 8:00 - 17:30','text',205],
+  ['en','footer','contact_company','IMPORT EXPORT AND CULTURAL DEVELOPMENT JOINT STOCK COMPANY','text',195],
+  ['en','footer','contact_address_hcm','99A Nguyen Van Troi, Phu Nhuan Ward, Ho Chi Minh City','text',200],
+  ['en','footer','contact_address_hn','94 Nguyen Hy Quang, Dong Da Ward, Hanoi','text',201],
+  ['en','footer','contact_phone','(+84 28) 399 70 829','text',202],
+  ['en','footer','contact_email','info@cdimex.com.vn','text',203],
+  ['en','footer','contact_website','www.bookmedi.vn','text',204],
+  ['en','footer','contact_hours','Mon - Fri: 8:00 - 17:30','text',205],
+  ['lo','footer','contact_company','IMPORT EXPORT AND CULTURAL DEVELOPMENT JOINT STOCK COMPANY','text',195],
+  ['lo','footer','contact_address_hcm','99A Nguyen Van Troi, Phu Nhuan Ward, Ho Chi Minh City','text',200],
+  ['lo','footer','contact_address_hn','94 Nguyen Hy Quang, Dong Da Ward, Hanoi','text',201],
+  ['lo','footer','contact_phone','(+84 28) 399 70 829','text',202],
+  ['lo','footer','contact_email','info@cdimex.com.vn','text',203],
+  ['lo','footer','contact_website','www.bookmedi.vn','text',204],
+  ['lo','footer','contact_hours','Mon - Fri: 8:00 - 17:30','text',205],
+  ['km','footer','contact_company','IMPORT EXPORT AND CULTURAL DEVELOPMENT JOINT STOCK COMPANY','text',195],
+  ['km','footer','contact_address_hcm','99A Nguyen Van Troi, Phu Nhuan Ward, Ho Chi Minh City','text',200],
+  ['km','footer','contact_address_hn','94 Nguyen Hy Quang, Dong Da Ward, Hanoi','text',201],
+  ['km','footer','contact_phone','(+84 28) 399 70 829','text',202],
+  ['km','footer','contact_email','info@cdimex.com.vn','text',203],
+  ['km','footer','contact_website','www.bookmedi.vn','text',204],
+  ['km','footer','contact_hours','Mon - Fri: 8:00 - 17:30','text',205],
+].forEach(r => upsertContact.run(...r));
+console.log('Migration: upserted Cdimex contact info');
 
 // Auto-migration: add stat_5 if missing
 const stat5 = db.prepare("SELECT id FROM content WHERE lang='vi' AND section='hero' AND content_key='stat_5_number'").get();
