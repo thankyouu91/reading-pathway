@@ -76,7 +76,7 @@ const allContent = {
       col2_title: 'Chương Trình', col3_title: 'Hỗ Trợ', col4_title: 'Liên Hệ',
       contact_zalo: '+84 93 736 03391', contact_email: 'Tranlong@cdimex.com.vn',
       contact_website: 'www.Cdimex.com.vn', contact_address: 'TP. Hồ Chí Minh, Việt Nam',
-      copyright: '2026 Reading Pathway. Powered By Cdimex Edu Solutions'
+      copyright: '2026 Reading Pathway. Powered By Cdimex Education Solutions'
     },
     nav: { cta_button: 'Đăng Ký Ngay' },
     b2b: {
@@ -150,7 +150,7 @@ const allContent = {
       col2_title: 'Programs', col3_title: 'Support', col4_title: 'Contact',
       contact_zalo: '+84 93 736 03391', contact_email: 'Tranlong@cdimex.com.vn',
       contact_website: 'www.Cdimex.com.vn', contact_address: 'Ho Chi Minh City, Vietnam',
-      copyright: '2026 Reading Pathway. Powered By Cdimex Edu Solutions'
+      copyright: '2026 Reading Pathway. Powered By Cdimex Education Solutions'
     },
     nav: { cta_button: 'Register Now' },
     b2b: {
@@ -224,7 +224,7 @@ const allContent = {
       col2_title: 'ໂປຣແກຣມ', col3_title: 'ຊ່ວຍເຫຼືອ', col4_title: 'ຕິດຕໍ່',
       contact_zalo: '+84 93 736 03391', contact_email: 'Tranlong@cdimex.com.vn',
       contact_website: 'www.Cdimex.com.vn', contact_address: 'ນະຄອນໂຮ່ຈີມິນ, ຫວຽດນາມ',
-      copyright: '2026 Reading Pathway. Powered By Cdimex Edu Solutions'
+      copyright: '2026 Reading Pathway. Powered By Cdimex Education Solutions'
     },
     nav: { cta_button: 'ລົງທະບຽນ' },
     b2b: {
@@ -298,7 +298,7 @@ const allContent = {
       col2_title: 'កម្មវិធី', col3_title: 'ជំនួយ', col4_title: 'ទំនាក់ទំនង',
       contact_zalo: '+84 93 736 03391', contact_email: 'Tranlong@cdimex.com.vn',
       contact_website: 'www.Cdimex.com.vn', contact_address: 'ទីក្រុងហូជីមិញ, វៀតណាម',
-      copyright: '2026 Reading Pathway. Powered By Cdimex Edu Solutions'
+      copyright: '2026 Reading Pathway. Powered By Cdimex Education Solutions'
     },
     nav: { cta_button: 'ចុះឈ្មោះ' },
     b2b: {
