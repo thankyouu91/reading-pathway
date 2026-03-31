@@ -23,6 +23,14 @@ if (contentCount === 0) {
   require('./database/fix-b2b');
 }
 
+// Auto-migration: add stat_5 if missing
+const stat5 = db.prepare("SELECT id FROM content WHERE lang='vi' AND section='hero' AND content_key='stat_5_number'").get();
+if (!stat5) {
+  db.prepare("INSERT OR IGNORE INTO content (lang, section, content_key, content_value, content_type, sort_order) VALUES ('vi','hero','stat_5_number','20K+','text',55)").run();
+  db.prepare("INSERT OR IGNORE INTO content (lang, section, content_key, content_value, content_type, sort_order) VALUES ('vi','hero','stat_5_label','Tài Liệu Chuyên Ngành','text',56)").run();
+  console.log('Migration: added stat_5');
+}
+
 // Daily backup
 db.backupTo();
 setInterval(() => db.backupTo(), 24 * 60 * 60 * 1000);
