@@ -161,6 +161,35 @@ app.use('/blog', require('./routes/blog'));
 app.use('/ho-tro', require('./routes/support'));
 app.use('/admin', require('./routes/admin'));
 
+// SEO: robots.txt
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain');
+  const siteUrl = process.env.SITE_URL || 'https://reading-pathway-production.up.railway.app';
+  res.send(`User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /api/\nSitemap: ${siteUrl}/sitemap.xml`);
+});
+
+// SEO: sitemap.xml
+app.get('/sitemap.xml', (req, res) => {
+  const siteUrl = process.env.SITE_URL || 'https://reading-pathway-production.up.railway.app';
+  const db = require('./database/db');
+  const posts = db.prepare('SELECT slug, updated_at FROM blog_posts WHERE is_published=1 ORDER BY created_at DESC').all();
+  const today = new Date().toISOString().split('T')[0];
+  const staticPages = [
+    { url: '/', priority: '1.0', changefreq: 'weekly' },
+    { url: '/blog', priority: '0.9', changefreq: 'daily' },
+    { url: '/ho-tro/faq', priority: '0.7', changefreq: 'monthly' },
+    { url: '/ho-tro/huong-dan', priority: '0.7', changefreq: 'monthly' },
+    { url: '/ho-tro/chinh-sach-bao-mat', priority: '0.5', changefreq: 'yearly' },
+    { url: '/ho-tro/dieu-khoan', priority: '0.5', changefreq: 'yearly' },
+  ];
+  const urls = [
+    ...staticPages.map(p => `  <url><loc>${siteUrl}${p.url}</loc><lastmod>${today}</lastmod><changefreq>${p.changefreq}</changefreq><priority>${p.priority}</priority></url>`),
+    ...posts.map(p => `  <url><loc>${siteUrl}/blog/${p.slug}</loc><lastmod>${(p.updated_at || today).split('T')[0]}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`)
+  ];
+  res.set('Content-Type', 'application/xml');
+  res.send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>`);
+});
+
 // 404
 app.use((req, res) => {
   res.status(404).send('Page not found');

@@ -13,7 +13,23 @@
     <meta property="og:url" content="<%= siteUrl %>/blog/<%= post.slug %>">
     <% if (post.cover_image) { %><meta property="og:image" content="<%= post.cover_image %>"><% } %>
     <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"BlogPosting","headline":"<%= post.title %>","description":"<%= post.meta_description || post.excerpt %>","datePublished":"<%= post.created_at %>","dateModified":"<%= post.updated_at %>","author":{"@type":"Organization","name":"Cdimex Education Solutions"},"publisher":{"@type":"Organization","name":"Reading Pathway"}}
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "mainEntityOfPage": {"@type": "WebPage", "@id": "<%= siteUrl %>/blog/<%= post.slug %>"},
+      "headline": "<%= post.title %>",
+      "description": "<%= post.meta_description || post.excerpt %>",
+      "datePublished": "<%= post.created_at %>",
+      "dateModified": "<%= post.updated_at %>",
+      <% if (post.cover_image) { %>"image": "<%= post.cover_image %>",<% } %>
+      "author": {"@type": "Organization", "name": "Cdimex Education Solutions", "url": "https://cdimex.com.vn"},
+      "publisher": {
+        "@type": "Organization",
+        "name": "Reading Pathway",
+        "logo": {"@type": "ImageObject", "url": "<%= siteUrl %>/images/logo-trophy9.svg"}
+      },
+      "keywords": "<%= post.meta_keywords || 'đọc hiểu tiếng Anh, Trophy9, Achieve3000, K9 K12, trường học' %>"
+    }
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles.css">
