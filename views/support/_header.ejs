@@ -37,21 +37,22 @@
       const ctx = canvas.getContext('2d');
 
       function resize() {
-        canvas.width  = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
+        const header = canvas.parentElement;
+        canvas.width  = header.offsetWidth;
+        canvas.height = header.offsetHeight;
       }
       resize();
       window.addEventListener('resize', resize);
 
-      // Floating shapes: circles, rings, dots
-      const shapes = Array.from({ length: 28 }, () => ({
+      // More shapes, larger sizes to fill the full banner
+      const shapes = Array.from({ length: 50 }, () => ({
         x: Math.random(),
         y: Math.random(),
-        r: Math.random() * 18 + 4,
-        opacity: Math.random() * 0.18 + 0.04,
-        speed: Math.random() * 0.18 + 0.06,
-        dx: (Math.random() - 0.5) * 0.3,
-        type: Math.floor(Math.random() * 3), // 0=circle, 1=ring, 2=dot
+        r: Math.random() * 36 + 5,
+        opacity: Math.random() * 0.15 + 0.03,
+        speed: Math.random() * 0.15 + 0.04,
+        dx: (Math.random() - 0.5) * 0.25,
+        type: Math.floor(Math.random() * 3),
         phase: Math.random() * Math.PI * 2,
       }));
 
@@ -59,27 +60,24 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const t = Date.now() / 1000;
         shapes.forEach(s => {
-          const x = (s.x * canvas.width + s.dx * t * 40) % canvas.width;
-          const y = ((s.y * canvas.height - s.speed * t * 20) % canvas.height + canvas.height) % canvas.height;
-          const pulse = 1 + Math.sin(t * 0.8 + s.phase) * 0.15;
+          const x = ((s.x * canvas.width + s.dx * t * 40) % canvas.width + canvas.width) % canvas.width;
+          const y = ((s.y * canvas.height - s.speed * t * 18) % canvas.height + canvas.height) % canvas.height;
+          const pulse = 1 + Math.sin(t * 0.8 + s.phase) * 0.12;
           const alpha = s.opacity * (0.85 + Math.sin(t * 0.5 + s.phase) * 0.15);
 
           ctx.beginPath();
           if (s.type === 0) {
-            // filled circle
             ctx.arc(x, y, s.r * pulse, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(120,180,255,${alpha})`;
+            ctx.fillStyle = `rgba(110,175,255,${alpha})`;
             ctx.fill();
           } else if (s.type === 1) {
-            // ring
             ctx.arc(x, y, s.r * pulse, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(150,200,255,${alpha * 1.4})`;
+            ctx.strokeStyle = `rgba(150,205,255,${alpha * 1.6})`;
             ctx.lineWidth = 1.5;
             ctx.stroke();
           } else {
-            // tiny bright dot
-            ctx.arc(x, y, s.r * 0.3 * pulse, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(200,230,255,${alpha * 2})`;
+            ctx.arc(x, y, s.r * 0.28 * pulse, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(210,235,255,${alpha * 2.2})`;
             ctx.fill();
           }
         });
