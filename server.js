@@ -30,6 +30,23 @@ if (blogCount === 0) {
   require('./database/seed');
 }
 
+// Auto-migration: add contact addresses HCM & HN if missing
+const addrHcm = db.prepare("SELECT id FROM content WHERE lang='vi' AND section='footer' AND content_key='contact_address_hcm'").get();
+if (!addrHcm) {
+  const insAddr = db.prepare("INSERT OR IGNORE INTO content (lang, section, content_key, content_value, content_type, sort_order) VALUES (?,?,?,?,?,?)");
+  [
+    ['vi','footer','contact_address_hcm','72 Trường Sơn, P.2, Tân Bình, TP. HCM','text',200],
+    ['vi','footer','contact_address_hn','14 Phan Chu Trinh, Hoàn Kiếm, Hà Nội','text',201],
+    ['en','footer','contact_address_hcm','72 Truong Son, Ward 2, Tan Binh, Ho Chi Minh City','text',200],
+    ['en','footer','contact_address_hn','14 Phan Chu Trinh, Hoan Kiem, Hanoi','text',201],
+    ['lo','footer','contact_address_hcm','72 Truong Son, Ward 2, Tan Binh, Ho Chi Minh City','text',200],
+    ['lo','footer','contact_address_hn','14 Phan Chu Trinh, Hoan Kiem, Hanoi','text',201],
+    ['km','footer','contact_address_hcm','72 Truong Son, Ward 2, Tan Binh, Ho Chi Minh City','text',200],
+    ['km','footer','contact_address_hn','14 Phan Chu Trinh, Hoan Kiem, Hanoi','text',201],
+  ].forEach(r => insAddr.run(...r));
+  console.log('Migration: added contact addresses HCM & HN');
+}
+
 // Auto-migration: add stat_5 if missing
 const stat5 = db.prepare("SELECT id FROM content WHERE lang='vi' AND section='hero' AND content_key='stat_5_number'").get();
 if (!stat5) {

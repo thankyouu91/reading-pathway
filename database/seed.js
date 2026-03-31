@@ -75,7 +75,9 @@ const allContent = {
       description: 'Nền tảng tăng cường đọc hiểu và luyện kèm 4 kỹ năng, giải pháp giáo dục theo Đề án Quyết định 2371/QĐ-TTg "Đưa tiếng Anh thành ngôn ngữ thứ hai trong trường học 2025 - 2035".',
       col2_title: 'Chương Trình', col3_title: 'Hỗ Trợ', col4_title: 'Liên Hệ',
       contact_zalo: '+84 93 736 03391', contact_email: 'Tranlong@cdimex.com.vn',
-      contact_website: 'www.Cdimex.com.vn', contact_address: 'TP. Hồ Chí Minh, Việt Nam',
+      contact_website: 'www.Cdimex.com.vn',
+      contact_address_hcm: '72 Trường Sơn, P.2, Tân Bình, TP. HCM',
+      contact_address_hn: '14 Phan Chu Trinh, Hoàn Kiếm, Hà Nội',
       copyright: '2026 Reading Pathway. Powered By Cdimex Education Solutions'
     },
     nav: { cta_button: 'Đăng Ký Ngay' },
@@ -149,7 +151,9 @@ const allContent = {
       description: 'A comprehensive reading pathway from Kindergarten to University. Building a strong language foundation for the future.',
       col2_title: 'Programs', col3_title: 'Support', col4_title: 'Contact',
       contact_zalo: '+84 93 736 03391', contact_email: 'Tranlong@cdimex.com.vn',
-      contact_website: 'www.Cdimex.com.vn', contact_address: 'Ho Chi Minh City, Vietnam',
+      contact_website: 'www.Cdimex.com.vn',
+      contact_address_hcm: '72 Truong Son, Ward 2, Tan Binh, Ho Chi Minh City',
+      contact_address_hn: '14 Phan Chu Trinh, Hoan Kiem, Hanoi',
       copyright: '2026 Reading Pathway. Powered By Cdimex Education Solutions'
     },
     nav: { cta_button: 'Register Now' },
@@ -223,7 +227,9 @@ const allContent = {
       description: 'ເສັ້ນທາງການອ່ານຄົບຖ້ວນ ຈາກອະນຸບານຫາມະຫາວິທະຍາໄລ.',
       col2_title: 'ໂປຣແກຣມ', col3_title: 'ຊ່ວຍເຫຼືອ', col4_title: 'ຕິດຕໍ່',
       contact_zalo: '+84 93 736 03391', contact_email: 'Tranlong@cdimex.com.vn',
-      contact_website: 'www.Cdimex.com.vn', contact_address: 'ນະຄອນໂຮ່ຈີມິນ, ຫວຽດນາມ',
+      contact_website: 'www.Cdimex.com.vn',
+      contact_address_hcm: '72 Truong Son, Ward 2, Tan Binh, Ho Chi Minh City',
+      contact_address_hn: '14 Phan Chu Trinh, Hoan Kiem, Hanoi',
       copyright: '2026 Reading Pathway. Powered By Cdimex Education Solutions'
     },
     nav: { cta_button: 'ລົງທະບຽນ' },
@@ -297,7 +303,9 @@ const allContent = {
       description: 'ផ្លូវអានយល់ពេញលេញ ពីមត្តេយ្យដល់មហាវិទ្យាល័យ។',
       col2_title: 'កម្មវិធី', col3_title: 'ជំនួយ', col4_title: 'ទំនាក់ទំនង',
       contact_zalo: '+84 93 736 03391', contact_email: 'Tranlong@cdimex.com.vn',
-      contact_website: 'www.Cdimex.com.vn', contact_address: 'ទីក្រុងហូជីមិញ, វៀតណាម',
+      contact_website: 'www.Cdimex.com.vn',
+      contact_address_hcm: '72 Truong Son, Ward 2, Tan Binh, Ho Chi Minh City',
+      contact_address_hn: '14 Phan Chu Trinh, Hoan Kiem, Hanoi',
       copyright: '2026 Reading Pathway. Powered By Cdimex Education Solutions'
     },
     nav: { cta_button: 'ចុះឈ្មោះ' },
