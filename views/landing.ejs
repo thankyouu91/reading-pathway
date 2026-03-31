@@ -20,7 +20,7 @@
     <meta property="og:url" content="<%= typeof siteUrl !== 'undefined' ? siteUrl : 'https://reading-pathway-production.up.railway.app' %>">
     <meta property="og:title" content="Reading Pathway | Chương Trình Đọc Hiểu Toàn Diện - Trophy9 & Achieve3000">
     <meta property="og:description" content="Lộ trình đọc hiểu & Pre-IELTS từ Mầm Non đến Đại Học. 54 cấp độ, 198 Readers, 9 hoạt động tương tác theo chuẩn Mỹ CCSS & Lexile.">
-    <meta property="og:image" content="<%= typeof siteUrl !== 'undefined' ? siteUrl : '' %>/images/og-reading-pathway.jpg">
+    <meta property="og:image" content="<%= typeof siteUrl !== 'undefined' ? siteUrl : '' %>/images/generated/og-social.jpg">
     <meta property="og:locale" content="vi_VN">
     <meta property="og:site_name" content="Reading Pathway">
 
@@ -28,7 +28,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Reading Pathway | Đọc Hiểu & Pre-IELTS - Trophy9 & Achieve3000">
     <meta name="twitter:description" content="Lộ trình đọc hiểu toàn diện từ Mầm Non đến Đại Học với Trophy9 và Achieve3000 theo chuẩn Mỹ.">
-    <meta name="twitter:image" content="<%= typeof siteUrl !== 'undefined' ? siteUrl : '' %>/images/og-reading-pathway.jpg">
+    <meta name="twitter:image" content="<%= typeof siteUrl !== 'undefined' ? siteUrl : '' %>/images/generated/og-social.jpg">
 
     <!-- Structured Data - JSON-LD -->
     <script type="application/ld+json">
@@ -231,14 +231,14 @@
             <div class="hero-image-stack">
                 <!-- Main hero image -->
                 <div class="hero-img-main">
-                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80" alt="Học sinh đọc sách" loading="eager">
+                    <img src="/images/generated/hero-main.jpg" alt="Học sinh đọc sách" loading="eager">
                 </div>
                 <!-- Floating accent images -->
                 <div class="hero-img-accent hero-img-1">
-                    <img src="https://images.unsplash.com/photo-1588075592446-265fd1e6e76f?w=300&q=80" alt="Trẻ em học tiếng Anh">
+                    <img src="/images/generated/hero-accent-1.jpg" alt="Trẻ em học tiếng Anh">
                 </div>
                 <div class="hero-img-accent hero-img-2">
-                    <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=300&q=80" alt="Sinh viên học tập">
+                    <img src="/images/generated/hero-accent-2.jpg" alt="Sinh viên học tập">
                 </div>
             </div>
         </div>
@@ -257,7 +257,7 @@
 
 <!-- Photo divider -->
 <div class="photo-divider">
-    <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=1400&q=70&h=200&fit=crop&crop=center" alt="Classroom" loading="lazy">
+    <img src="/images/generated/divider-classroom.jpg" alt="Classroom" loading="lazy">
     <div class="photo-divider-overlay"></div>
 </div>
 
@@ -394,11 +394,11 @@
         <div class="pathway-timeline">
             <% const stages = [
                 { n: 1, icon: '🌱', css: 'kindergarten', dotCss: '', lineCss: '',
-                  illus: 'https://stories.freepiklabs.com/storage/4524/book-lover_Artboard-1.svg' },
+                  illus: '/images/generated/bg-kids-reading.jpg' },
                 { n: 2, icon: '📖', css: 'primary', dotCss: '', lineCss: '',
-                  illus: 'https://stories.freepiklabs.com/storage/16533/472-Learning_Artboard-1.svg' },
+                  illus: '/images/generated/stage-elementary.jpg' },
                 { n: 3, icon: '🎯', css: 'secondary', dotCss: '', lineCss: '',
-                  illus: 'https://stories.freepiklabs.com/storage/34149/learning-01.svg' }
+                  illus: '/images/generated/stage-middle.jpg' }
             ]; %>
             <% stages.forEach(s => { %>
             <div class="pathway-stage" data-stage="<%= s.n %>">
@@ -449,9 +449,9 @@
 
             <% const stagesAchieve = [
                 { n: 4, icon: '🏆', css: 'highschool',
-                  illus: 'https://stories.freepiklabs.com/storage/34549/Online-Learning_Mesa-de-trabajo-1.svg' },
+                  illus: '/images/generated/bg-teens-studying.jpg' },
                 { n: 5, icon: '🎓', css: 'university',
-                  illus: 'https://stories.freepiklabs.com/storage/1548/63-Graduation_Artboard-1.svg' }
+                  illus: '/images/generated/stage-university.jpg' }
             ]; %>
             <% stagesAchieve.forEach((s, idx) => { %>
             <div class="pathway-stage" data-stage="<%= s.n %>">
@@ -586,7 +586,7 @@
 
 <!-- Photo divider -->
 <div class="photo-divider">
-    <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1400&q=70&h=200&fit=crop&crop=center" alt="Students" loading="lazy">
+    <img src="/images/generated/divider-students.jpg" alt="Students" loading="lazy">
     <div class="photo-divider-overlay"></div>
 </div>
 
@@ -809,7 +809,7 @@
 
 <!-- Photo divider -->
 <div class="photo-divider">
-    <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1400&q=70&h=200&fit=crop&crop=center" alt="Books and learning" loading="lazy">
+    <img src="/images/generated/divider-books.jpg" alt="Books and learning" loading="lazy">
     <div class="photo-divider-overlay"></div>
 </div>
 
