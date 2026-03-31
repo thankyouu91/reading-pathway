@@ -23,6 +23,13 @@ if (contentCount === 0) {
   require('./database/fix-b2b');
 }
 
+// Auto-seed blog posts if missing
+const blogCount = db.prepare('SELECT COUNT(*) as c FROM blog_posts WHERE is_published=1').get().c;
+if (blogCount === 0) {
+  console.log('No blog posts found, seeding blog posts...');
+  require('./database/seed');
+}
+
 // Auto-migration: add stat_5 if missing
 const stat5 = db.prepare("SELECT id FROM content WHERE lang='vi' AND section='hero' AND content_key='stat_5_number'").get();
 if (!stat5) {
