@@ -1,3 +1,10 @@
+/* ===== EDU CANVAS – keeps all page content above floating symbols ===== */
+.navbar, header, section, footer, main, .hero, .programs, .features,
+.contact, .testimonials, .faq-section, .b2b, .logos {
+  position: relative;
+  z-index: 1;
+}
+
 /* ===== RESET & BASE ===== */
 *, *::before, *::after {
     margin: 0;

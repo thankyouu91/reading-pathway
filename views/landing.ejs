@@ -929,5 +929,94 @@
 
 <script src="script.js"></script>
 <script src="3d-effects.js"></script>
+
+<!-- Floating education symbols background -->
+<canvas id="eduCanvas" style="
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
+"></canvas>
+
+<script>
+(function() {
+  const canvas = document.getElementById('eduCanvas');
+  const ctx    = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const symbols = [
+    '📚','📖','✏️','📝','🎓','🔤',
+    'A','B','C','D','E','F',
+    'a','b','c','d','e',
+    '1','2','3','4','5',
+    'α','β','★','?','!'
+  ];
+
+  // Each particle falls straight down, slight wobble horizontally
+  const particles = Array.from({ length: 35 }, () => createParticle(true));
+
+  function createParticle(randomY) {
+    return {
+      x      : Math.random() * window.innerWidth,
+      y      : randomY ? Math.random() * window.innerHeight : -30,
+      symbol : symbols[Math.floor(Math.random() * symbols.length)],
+      size   : Math.random() * 13 + 9,
+      opacity: Math.random() * 0.13 + 0.05,
+      speedY : Math.random() * 0.5 + 0.2,
+      wobble : Math.random() * 0.4 + 0.1,
+      phase  : Math.random() * Math.PI * 2,
+      rotate : Math.random() * Math.PI * 2,
+      rotSpd : (Math.random() - 0.5) * 0.008,
+    };
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const t = Date.now() / 1000;
+
+    particles.forEach((p, i) => {
+      // Fall down
+      p.y      += p.speedY;
+      // Gentle horizontal wobble
+      p.x      += Math.sin(t * p.wobble + p.phase) * 0.35;
+      // Slow rotation
+      p.rotate += p.rotSpd;
+
+      // Reset when off-screen bottom
+      if (p.y > canvas.height + 30) {
+        particles[i] = createParticle(false);
+        return;
+      }
+
+      // Fade in near top, fade out near bottom
+      const fadeIn  = Math.min(1, p.y / 80);
+      const fadeOut = Math.min(1, (canvas.height - p.y) / 80);
+      const alpha   = p.opacity * fadeIn * fadeOut;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rotate);
+      ctx.globalAlpha = alpha;
+      ctx.font = `${p.size}px Inter, sans-serif`;
+      ctx.fillStyle = 'rgba(100,160,240,1)';
+      ctx.textAlign    = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(p.symbol, 0, 0);
+      ctx.restore();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
 </body>
 </html>
