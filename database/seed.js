@@ -455,5 +455,25 @@ const seedBlogPosts = db.transaction(() => {
 });
 
 const blogCreated = seedBlogPosts();
+// Backfill post dates for natural publishing schedule
+const updateDate = db.prepare('UPDATE blog_posts SET created_at=?, updated_at=? WHERE slug=? AND created_at > ?');
+const postDates = [
+  { slug: 'de-an-2371-tieng-anh-ngon-ngu-thu-hai',                date: '2026-03-02 08:30:00' },
+  { slug: 'lexile-la-gi-do-trinh-do-doc-hieu',                    date: '2026-03-06 08:15:00' },
+  { slug: 'trophy9-9-hoat-dong-hoc-tieng-anh',                    date: '2026-03-10 07:45:00' },
+  { slug: 'chien-luoc-doc-hieu-ielts-tang-band-diem',              date: '2026-03-14 08:00:00' },
+  { slug: 'achieve3000-nen-tang-doc-hieu-hoc-sinh-thpt',           date: '2026-03-18 07:30:00' },
+  { slug: 'blended-learning-phuong-phap-day-tieng-anh-hien-dai',  date: '2026-03-22 08:20:00' },
+  { slug: 'so-sanh-phan-mem-day-tieng-anh-k12-2025',              date: '2026-03-25 08:00:00' },
+  { slug: 'trophy9-vs-achieve3000-chon-giai-phap-nao',            date: '2026-03-28 07:50:00' },
+  { slug: 'roi-phan-mem-tieng-anh-truong-hoc-hieu-truong',        date: '2026-03-31 08:10:00' },
+];
+db.transaction(() => {
+  for (const p of postDates) {
+    updateDate.run(p.date, p.date, p.slug, p.date); // only update if current date is AFTER target (freshly seeded)
+  }
+})();
+
+
 const blogTotal = db.prepare('SELECT COUNT(*) as c FROM blog_posts WHERE is_published=1').get().c;
 console.log(`Blog posts seeded: ${blogCreated} new | Total published: ${blogTotal}`);
